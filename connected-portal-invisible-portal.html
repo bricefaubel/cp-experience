@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Connected Portal — The Invisible Portal PRD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Spline+Sans+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0E1316; --ink-2:#39434B; --ink-3:#67727B; --ink-4:#98A3AB;
+  --page:#EDF0F1; --surface:#FFFFFF; --line:#DBE1E4; --line-2:#E9EDEF;
+  --nav:#070909;
+
+  --owned:#0B6E60;   --owned-t:#E4F2EF; --owned-l:#B4DBD3;
+  --infl:#8A5A00;    --infl-t:#FBF3E0;  --infl-l:#E8D49E;
+  --unctrl:#5B6770;  --unctrl-t:#EDF0F1;--unctrl-l:#D5DBDE;
+
+  --today:#C4300F;
+  --host:#4B41A8;    --host-t:#EEEDF9;
+
+  --r:6px;
+  --sans:'Instrument Sans',system-ui,-apple-system,sans-serif;
+  --mono:'Spline Sans Mono',ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;scroll-padding-top:72px;}
+body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;}
+h1,h2,h3,h4{margin:0;line-height:1.2;letter-spacing:-0.02em;font-weight:600;}
+p{margin:0 0 .85em;}
+a{color:var(--owned);}
+code{font-family:var(--mono);font-size:.86em;}
+.wrap{max-width:1160px;margin:0 auto;padding:0 32px;}
+
+.masthead{background:var(--nav);color:#fff;padding:44px 0 40px;}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#5BC6B4;margin-bottom:14px;}
+.masthead h1{font-size:clamp(30px,4.4vw,50px);letter-spacing:-.032em;max-width:15ch;}
+.masthead .sub{color:#A2AEB5;margin-top:14px;font-size:17px;max-width:62ch;}
+.meta-row{display:flex;flex-wrap:wrap;gap:26px;margin-top:28px;padding-top:22px;border-top:1px solid #1F2528;}
+.meta-row div{font-size:13px;color:#78848C;}
+.meta-row strong{display:block;color:#E4EAED;font-weight:500;font-size:14px;margin-top:2px;}
+
+.railnav{position:sticky;top:0;z-index:40;background:rgba(237,240,241,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
+.railnav .wrap{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;}
+.railnav .wrap::-webkit-scrollbar{display:none;}
+.railnav a{font-family:var(--mono);font-size:11.5px;letter-spacing:.02em;text-transform:uppercase;color:var(--ink-3);text-decoration:none;padding:15px 12px;white-space:nowrap;border-bottom:2px solid transparent;}
+.railnav a:hover{color:var(--ink);}
+.railnav a.on{color:var(--ink);border-bottom-color:var(--owned);}
+
+section{padding:56px 0;border-bottom:1px solid var(--line);}
+.snum{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-4);margin-bottom:12px;}
+section h2{font-size:29px;letter-spacing:-.028em;margin-bottom:8px;}
+.lede{font-size:17px;color:var(--ink-2);max-width:72ch;}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(275px,1fr));gap:24px;margin-top:30px;}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px;}
+.card h4{font-size:15px;margin-bottom:7px;}
+.card p{font-size:14.5px;color:var(--ink-2);margin-bottom:0;}
+.card .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-4);display:block;margin-bottom:9px;}
+
+.bet{background:var(--nav);color:#fff;border-radius:var(--r);padding:34px 38px;margin-top:26px;}
+.bet .q{font-size:clamp(21px,2.6vw,30px);font-weight:600;letter-spacing:-.028em;line-height:1.25;max-width:25ch;}
+.bet .note{color:#8A959C;font-size:14.5px;margin-top:16px;max-width:68ch;margin-bottom:0;}
+
+.tradeoff{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--today);border-radius:var(--r);padding:22px 26px;margin-top:22px;}
+.tradeoff .t{font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--today);margin-bottom:8px;}
+.tradeoff p{margin-bottom:0;color:var(--ink-2);font-size:15px;}
+
+.evidence{list-style:none;padding:0;margin:26px 0 0;display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;}
+.evidence li{background:var(--surface);padding:15px 20px;font-size:14.5px;color:var(--ink-2);display:grid;grid-template-columns:24px 1fr;gap:14px;}
+.evidence li b{color:var(--ink);font-weight:600;}
+.evidence .n{font-family:var(--mono);font-size:11px;color:var(--today);padding-top:3px;}
+
+table{width:100%;border-collapse:collapse;margin-top:24px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;font-size:14px;}
+th{text-align:left;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:500;padding:12px 16px;background:#F6F8F9;border-bottom:1px solid var(--line);}
+td{padding:12px 16px;border-bottom:1px solid var(--line-2);vertical-align:top;color:var(--ink-2);}
+tr:last-child td{border-bottom:none;}
+td.mono{font-family:var(--mono);font-size:12.5px;color:var(--ink-3);white-space:nowrap;}
+td strong{color:var(--ink);font-weight:600;}
+
+.tierchip{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:3px;border:1px solid;white-space:nowrap;}
+.tierchip.owned{color:var(--owned);background:var(--owned-t);border-color:var(--owned-l);}
+.tierchip.infl{color:var(--infl);background:var(--infl-t);border-color:var(--infl-l);}
+.tierchip.unctrl{color:var(--unctrl);background:var(--unctrl-t);border-color:var(--unctrl-l);}
+.sq{width:8px;height:8px;flex:none;}
+.sq.owned{background:var(--owned);}
+.sq.infl{background:var(--infl);clip-path:polygon(50% 0,100% 100%,0 100%);}
+.sq.unctrl{border:1.5px solid var(--unctrl);border-radius:50%;}
+
+/* ---------- lab ---------- */
+.lab{margin-top:28px;background:var(--surface);border:1px solid var(--line);border-radius:9px;overflow:hidden;box-shadow:0 18px 44px -30px rgba(7,9,9,.45);}
+.labbar{background:#12171A;padding:13px 18px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;}
+.labbar .lb{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#6E7A82;}
+.seg{display:flex;background:#0A0D0F;border:1px solid #232A2E;border-radius:5px;overflow:hidden;}
+.seg button{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:#828E96;background:none;border:none;padding:7px 11px;cursor:pointer;border-right:1px solid #232A2E;}
+.seg button:last-child{border-right:none;}
+.seg button[aria-pressed="true"]{background:#5BC6B4;color:#0A0D0F;font-weight:600;}
+.seg button:focus-visible{outline:2px solid #5BC6B4;outline-offset:-2px;}
+
+.labbody{display:grid;grid-template-columns:1fr 330px;gap:0;}
+.stage{padding:26px;background:var(--page);min-height:430px;}
+.side{border-left:1px solid var(--line);padding:22px;background:var(--surface);}
+.side h5{font-family:var(--mono);font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-4);margin:0 0 10px;font-weight:500;}
+.side .blk{padding-bottom:18px;margin-bottom:18px;border-bottom:1px solid var(--line-2);}
+.side .blk:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+
+.budget input[type=range]{width:100%;accent-color:var(--owned);margin:6px 0 2px;}
+.budget .read{font-family:var(--mono);font-size:12px;color:var(--ink-2);display:flex;justify-content:space-between;}
+.budget .read b{color:var(--ink);}
+.marks{font-family:var(--mono);font-size:10px;color:var(--ink-4);display:flex;justify-content:space-between;margin-top:3px;}
+
+.fieldlist{font-family:var(--mono);font-size:11.5px;line-height:1.9;}
+.fieldlist div{display:flex;justify-content:space-between;gap:10px;color:var(--ink-4);}
+.fieldlist div.in{color:var(--ink-2);}
+.fieldlist div.core{color:var(--owned);font-weight:600;}
+.fieldlist .st{opacity:.7;}
+
+/* renderings */
+.render{max-width:620px;margin:0 auto;}
+.rlabel{font-family:var(--mono);font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-4);margin-bottom:10px;text-align:center;}
+
+/* deep FSM host mock */
+.host{background:#fff;border:1px solid var(--line);border-radius:7px;overflow:hidden;}
+.hostbar{background:var(--host);color:#fff;padding:10px 16px;display:flex;align-items:center;gap:12px;font-size:12.5px;}
+.hostbar .hlogo{font-weight:700;letter-spacing:.02em;}
+.hostbar .hnav{margin-left:auto;display:flex;gap:14px;color:#C6C2EC;font-size:11.5px;}
+.hostbody{padding:18px;}
+.hostrow{display:grid;grid-template-columns:118px 1fr;gap:12px;padding:8px 0;border-bottom:1px solid var(--line-2);font-size:13.5px;}
+.hostrow:last-child{border-bottom:none;}
+.hostrow .k{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-4);padding-top:3px;font-family:var(--mono);}
+.hostrow .v{color:var(--ink-2);}
+.hostrow .v strong{color:var(--ink);}
+.hostrow .v .mn{font-family:var(--mono);font-size:12px;}
+.hostpri{display:inline-block;background:#FCE9E4;color:var(--today);border:1px solid #F3C8BB;padding:2px 8px;border-radius:3px;font-size:11.5px;font-weight:600;}
+.notes{font-family:var(--mono);font-size:11.5px;color:var(--ink-2);white-space:pre-wrap;background:#F7F9FA;border:1px solid var(--line-2);border-radius:4px;padding:11px;line-height:1.65;}
+.prov{font-family:var(--mono);font-size:10.5px;color:var(--ink-4);margin-top:10px;}
+
+/* annotation */
+.anno .carrier-owned{position:relative;outline:1.5px dashed var(--owned);outline-offset:3px;border-radius:3px;}
+.anno .host-owned{position:relative;outline:1.5px dashed var(--infl);outline-offset:3px;border-radius:3px;}
+.annokey{display:flex;gap:16px;justify-content:center;margin-top:16px;font-family:var(--mono);font-size:10.5px;color:var(--ink-3);}
+.annokey i{display:inline-block;width:16px;height:0;border-top:1.5px dashed;margin-right:6px;vertical-align:middle;}
+
+/* email */
+.mail{background:#fff;border:1px solid var(--line);border-radius:7px;overflow:hidden;}
+.mailhd{padding:14px 18px;border-bottom:1px solid var(--line-2);}
+.mailhd .subj{font-size:14.5px;font-weight:600;}
+.mailhd .frm{font-size:12px;color:var(--ink-4);margin-top:4px;font-family:var(--mono);}
+.mailbody{padding:16px 18px;font-family:var(--mono);font-size:12px;line-height:1.75;color:var(--ink-2);white-space:pre-wrap;}
+
+/* sms */
+.phoneframe{max-width:300px;margin:0 auto;background:#12171A;border-radius:26px;padding:14px 10px;}
+.phonescreen{background:#F3F5F6;border-radius:16px;padding:14px 12px;min-height:300px;}
+.bubble{background:#fff;border:1px solid var(--line);border-radius:14px 14px 14px 3px;padding:11px 13px;font-size:12.5px;line-height:1.6;color:var(--ink-2);white-space:pre-wrap;}
+.smsmeta{font-family:var(--mono);font-size:10px;color:var(--ink-4);margin-top:8px;text-align:right;}
+.smsover{color:var(--today);}
+
+/* plaintext / receipt */
+.receipt{background:#FBFAF7;border:1px solid var(--line);border-radius:3px;padding:20px 22px;font-family:var(--mono);font-size:12px;line-height:1.7;color:#20262A;white-space:pre-wrap;max-width:470px;margin:0 auto;box-shadow:0 2px 0 rgba(0,0,0,.03);}
+
+/* fallback inbox */
+.inbox{background:#fff;border:1px solid var(--line);border-radius:7px;overflow:hidden;}
+.inboxhd{background:var(--nav);color:#fff;padding:11px 16px;font-size:12.5px;display:flex;gap:12px;align-items:center;}
+.inboxhd .lg{font-weight:600;}
+.inboxhd .lg span{color:#5BC6B4;font-weight:400;}
+.inboxhd .tg{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:#7A868D;}
+.inrow{padding:14px 16px;border-bottom:1px solid var(--line-2);display:grid;grid-template-columns:1fr auto;gap:14px;}
+.inrow:last-child{border-bottom:none;}
+.inurg{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--today);font-weight:600;margin-bottom:4px;}
+.inurg.wk{color:var(--infl);}
+.intitle{font-size:14.5px;font-weight:600;margin-bottom:4px;}
+.inmeta{font-size:12.5px;color:var(--ink-3);}
+.inacts{display:flex;gap:6px;align-items:flex-start;}
+
+.btn{font-family:var(--sans);font-size:12.5px;font-weight:500;padding:6px 12px;border-radius:4px;border:1px solid var(--line);background:#fff;color:var(--ink-2);cursor:pointer;white-space:nowrap;}
+.btn:hover{border-color:#C2CBD0;background:#F7F9FA;}
+.btn.primary{background:var(--owned);border-color:var(--owned);color:#fff;}
+.btn.primary:hover{background:#095A4F;border-color:#095A4F;}
+.btn:focus-visible{outline:2px solid var(--owned);outline-offset:2px;}
+
+/* lifecycle */
+.lifewrap{margin-top:26px;background:var(--surface);border:1px solid var(--line);border-radius:9px;overflow:hidden;}
+.lifebar{background:#12171A;padding:13px 18px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;}
+.lifebody{padding:26px;}
+.chain{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;}
+.node{border:1px solid var(--line);border-radius:5px;padding:12px 10px;background:#F7F9FA;transition:opacity .2s,background .2s,border-color .2s;}
+.node .who{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-4);margin-bottom:6px;}
+.node .nm{font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--ink);}
+.node .ds{font-size:11px;color:var(--ink-3);margin-top:5px;line-height:1.4;}
+.node.lit{background:var(--owned-t);border-color:var(--owned-l);}
+.node.lit .nm{color:var(--owned);}
+.node.dark{opacity:.32;background:#EDF0F1;border-style:dashed;}
+.node.dark .nm{color:var(--ink-3);}
+.visread{margin-top:20px;padding-top:18px;border-top:1px solid var(--line-2);display:flex;flex-wrap:wrap;gap:26px;align-items:baseline;}
+.visread .big{font-family:var(--mono);font-size:30px;font-weight:600;letter-spacing:-.02em;}
+.visread .lbl{font-size:13.5px;color:var(--ink-3);max-width:52ch;}
+
+/* tech app */
+.techwrap{display:grid;grid-template-columns:320px 1fr;gap:34px;margin-top:28px;align-items:start;}
+.tphone{background:#12171A;border-radius:30px;padding:12px;box-shadow:0 22px 50px -26px rgba(7,9,9,.6);}
+.tscreen{background:var(--page);border-radius:20px;overflow:hidden;min-height:560px;display:flex;flex-direction:column;}
+.tnav{background:var(--nav);color:#fff;padding:12px 16px;display:flex;align-items:center;gap:10px;}
+.tnav .bk{color:#5BC6B4;font-size:16px;}
+.tnav .ti{font-size:12.5px;font-weight:500;}
+.ttabs{display:flex;background:#0E1316;}
+.ttabs button{flex:1;background:none;border:none;color:#7A868D;font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;padding:9px 2px;cursor:pointer;border-bottom:2px solid transparent;}
+.ttabs button[aria-pressed="true"]{color:#5BC6B4;border-bottom-color:#5BC6B4;}
+.tbody{padding:16px;overflow:auto;flex:1;}
+
+.jobcard{background:#fff;border:1px solid var(--line);border-left:3px solid var(--today);border-radius:7px;padding:18px;}
+.jobcard .urg{font-family:var(--mono);font-size:22px;font-weight:700;letter-spacing:-.01em;color:var(--today);line-height:1;margin-bottom:10px;}
+.jobcard .hl{font-size:19px;font-weight:600;letter-spacing:-.02em;line-height:1.25;margin-bottom:14px;}
+.jobcard .addr{font-size:13.5px;color:var(--ink-2);margin-bottom:3px;}
+.jobcard .eq{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);margin-top:10px;line-height:1.7;}
+.bringbox{background:#FFF8E8;border:1px solid var(--infl-l);border-radius:5px;padding:12px 14px;margin-top:14px;}
+.bringbox .bl{font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--infl);margin-bottom:5px;}
+.bringbox .bv{font-size:14px;font-weight:600;color:var(--ink);}
+.tmini{background:#fff;border:1px solid var(--line);border-radius:7px;padding:14px;margin-top:12px;}
+.tmini h6{font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-4);margin:0 0 7px;font-weight:500;}
+.tmini p{font-size:13.5px;color:var(--ink-2);margin:0;}
+.tmini .kv{font-size:12.5px;}
+.tmini .kv div{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--line-2);}
+.tmini .kv div:last-child{border-bottom:none;}
+.tmini .kv span:first-child{color:var(--ink-3);}
+
+.chk{display:flex;gap:11px;padding:13px 0;border-bottom:1px solid var(--line-2);cursor:pointer;align-items:flex-start;}
+.chk:last-child{border-bottom:none;}
+.chkbox{width:22px;height:22px;flex:none;border:2px solid var(--line);border-radius:4px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;}
+.chk.done .chkbox{background:var(--owned);border-color:var(--owned);}
+.chk.done .chktext{color:var(--ink-4);text-decoration:line-through;}
+.chktext{font-size:14px;color:var(--ink);line-height:1.4;}
+.chknum{font-family:var(--mono);font-size:10px;color:var(--ink-4);display:block;margin-bottom:2px;}
+
+.cap label{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-4);margin:14px 0 6px;}
+.cap .opts{display:flex;gap:6px;flex-wrap:wrap;}
+.cap .opts button{flex:1;min-width:74px;font-size:12.5px;padding:9px 6px;border:1px solid var(--line);border-radius:5px;background:#fff;cursor:pointer;color:var(--ink-2);}
+.cap .opts button[aria-pressed="true"]{border-color:var(--owned);background:var(--owned-t);color:var(--owned);font-weight:600;}
+.cap textarea{width:100%;border:1px solid var(--line);border-radius:5px;padding:9px;font-family:var(--sans);font-size:13px;resize:vertical;min-height:60px;color:var(--ink);}
+.timerbar{font-family:var(--mono);font-size:10.5px;color:var(--ink-4);margin-top:12px;display:flex;justify-content:space-between;}
+.timerbar b{color:var(--owned);}
+
+.offline{background:#FFF4E5;border:1px solid var(--infl-l);border-radius:5px;padding:9px 12px;font-size:12px;color:var(--infl);margin-bottom:12px;font-family:var(--mono);}
+
+.techside .card{margin-bottom:14px;}
+
+/* misc */
+.pstep{border-left:2px solid var(--line);padding:0 0 26px 22px;position:relative;margin-left:8px;}
+.pstep:last-child{border-left-color:transparent;padding-bottom:0;}
+.pstep::before{content:'';position:absolute;left:-6px;top:5px;width:10px;height:10px;border-radius:50%;background:var(--surface);border:2px solid var(--owned);}
+.pstep h4{font-size:15px;margin-bottom:4px;}
+.pstep .ph{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-4);margin-bottom:5px;}
+.pstep p{font-size:14px;color:var(--ink-2);margin-bottom:0;}
+
+.qlist{counter-reset:q;list-style:none;padding:0;margin:24px 0 0;}
+.qlist li{counter-increment:q;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 20px;margin-bottom:9px;font-size:14.5px;color:var(--ink-2);display:grid;grid-template-columns:28px 1fr;gap:12px;}
+.qlist li::before{content:counter(q,decimal-leading-zero);font-family:var(--mono);font-size:11px;color:var(--ink-4);padding-top:3px;}
+.qlist li b{color:var(--ink);font-weight:600;}
+
+.note-inline{font-size:13.5px;color:var(--ink-3);max-width:74ch;margin-top:14px;}
+footer{padding:40px 0 60px;color:var(--ink-4);font-size:13px;}
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);background:var(--nav);color:#fff;padding:12px 20px;border-radius:6px;font-size:13.5px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:90;}
+.toast.show{opacity:1;transform:translate(-50%,0);}
+.toast b{color:#5BC6B4;font-weight:500;}
+
+@media(max-width:960px){
+  .labbody{grid-template-columns:1fr;}
+  .side{border-left:none;border-top:1px solid var(--line);}
+  .techwrap{grid-template-columns:1fr;}
+  .tphone{max-width:340px;}
+  .chain{grid-template-columns:repeat(4,1fr);}
+}
+@media(max-width:640px){
+  .wrap{padding:0 18px;}
+  .chain{grid-template-columns:repeat(2,1fr);}
+  .stage{padding:16px;}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;} html{scroll-behavior:auto;}}
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div class="wrap">
+    <div class="eyebrow">Product requirements · Option C</div>
+    <h1>The invisible portal</h1>
+    <p class="sub">Intelligence delivered into the software dealers already use. The web portal stops being a destination and becomes administration; the record travels instead.</p>
+    <div class="meta-row">
+      <div>Version<strong>1.0 — draft for design</strong></div>
+      <div>Primary deliverable<strong>Technician app + payload</strong></div>
+      <div>Investment<strong>Low–medium build</strong></div>
+      <div>Gating question<strong>Will partners return outcome data?</strong></div>
+    </div>
+  </div>
+</div>
+
+<nav class="railnav">
+  <div class="wrap">
+    <a href="#diagnosis">Diagnosis</a>
+    <a href="#bet">The bet</a>
+    <a href="#tiers">Three tiers</a>
+    <a href="#record">The record</a>
+    <a href="#lifecycle">Lifecycle</a>
+    <a href="#tech">Technician app</a>
+    <a href="#content">Content</a>
+    <a href="#brand">Brand risk</a>
+    <a href="#design">Design direction</a>
+    <a href="#measure">Measurement</a>
+    <a href="#sequence">Sequencing</a>
+    <a href="#questions">Questions</a>
+  </div>
+</nav>
+
+<!-- 01 -->
+<section id="diagnosis">
+  <div class="wrap">
+    <div class="snum">01 — Diagnosis</div>
+    <h2>A system of record that waits to be visited</h2>
+    <p class="lede">Connected equipment produces exactly what a dealer's business runs on. The portal converts almost none of it into scheduled work. Low daily engagement is the symptom, not the problem.</p>
+    <ul class="evidence">
+      <li><span class="n">01</span><span><b>Notifications default to None.</b> All alert types, both email fields. The product cannot reach a dealer unless the dealer initiates contact.</span></li>
+      <li><span class="n">02</span><span><b>Duplicates are not collapsed.</b> Three identical zone communication faults inside one minute, each its own row in a 96-item list.</span></li>
+      <li><span class="n">03</span><span><b>Faults ship as codes.</b> <code>184-IDU DISSIP. BOARD COMM FAULT</code> — no meaning, no cause, no action.</span></li>
+      <li><span class="n">04</span><span><b>The predictive engine is manual.</b> Malfunction Detection only runs when someone presses "Run a Report."</span></li>
+      <li><span class="n">05</span><span><b>Diagnosis takes four screens</b>, ending in ~50 raw config fields in flat alphabetical order.</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- 02 -->
+<section id="bet">
+  <div class="wrap">
+    <div class="snum">02 — The bet</div>
+    <div class="bet">
+      <div class="q">The right number of portal logins is zero. The signal should appear inside the software dealers already use all day.</div>
+      <p class="note">Option A tries to earn the dealer's morning. This option refuses the premise: dealer attention is already spent inside an FSM, a dispatch board, a technician's phone. Put the intelligence where the attention already is.</p>
+    </div>
+    <div class="tradeoff">
+      <div class="t">The tradeoff, stated plainly</div>
+      <p>This trades <strong>relationship for reach</strong>. It delivers value to more dealers, faster, with less behaviour change than any alternative — and it moves Carrier one step further from the dealer, into the position of a data supplier inside someone else's software. Pro-tier merchandising, usage telemetry, and dealer influence all get harder. The countermeasures in §08 are real but partial.</p>
+    </div>
+    <div class="cols">
+      <div class="card"><span class="tag">Moves out of the portal</span><h4>Triage and dispatch</h4><p>Prioritisation and assignment happen in the dealer's FSM. This is the defining decision of Option C — and the one that is hardest to reverse.</p></div>
+      <div class="card"><span class="tag">Moves into Carrier's surface</span><h4>The technician app</h4><p>Diagnosis, check sequence, parts prediction, outcome capture. Under this strategy the app stops being a companion utility and becomes the product's centre of gravity.</p></div>
+      <div class="card"><span class="tag">Prerequisite — unavoidable</span><h4>Grouping and plain language</h4><p>Shared with Option A. Syndicating raw codes is <em>worse than shipping nothing</em>: it pollutes a partner's system and trains dispatchers to ignore Carrier records. Partner trust is spent once.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 -->
+<section id="tiers">
+  <div class="wrap">
+    <div class="snum">03 — Three tiers of control</div>
+    <h2>Design does not own most of this experience</h2>
+    <p class="lede">This strategy has a structural feature no normal PRD has: a meaningful share of the user-facing experience renders in software Carrier does not own and cannot design. Every surface decision must be explicit about which tier it sits in.</p>
+    <table>
+      <thead><tr><th style="width:150px">Tier</th><th style="width:230px">Surfaces</th><th>Design controls</th><th>Must survive</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tierchip owned"><span class="sq owned"></span>Owned</span></td><td>Technician app, admin portal, fallback inbox, notification templates</td><td><strong>Everything</strong> — layout, type, colour, motion, interaction</td><td>Normal product constraints</td></tr>
+        <tr><td><span class="tierchip infl"><span class="sq infl"></span>Influenced</span></td><td>Deep-tier FSM rendering of a Carrier record</td><td>Field structure, content, ordering, budgets, optional embedded view</td><td>Host typography, colour, layout, truncation</td></tr>
+        <tr><td><span class="tierchip unctrl"><span class="sq unctrl"></span>Uncontrolled</span></td><td>Shallow FSM, email, printed tickets, SMS, whiteboards</td><td><strong>Words only</strong></td><td>Plain text, no formatting whatsoever</td></tr>
+      </tbody>
+    </table>
+    <div class="tradeoff" style="border-left-color:var(--owned)">
+      <div class="t" style="color:var(--owned)">The governing constraint</div>
+      <p>The diagnostic record must do its job when rendered as unformatted plain text in a 400-character field, and must do it <em>better but not differently</em> when rendered in a surface Carrier controls. <strong>Content hierarchy is carried by word order and sentence structure, not by type, colour, or layout.</strong> If the record only makes sense with a red badge next to it, it is designed wrong.</p>
+    </div>
+    <p class="note-inline"><strong>Practical test for every content decision:</strong> print the record on a thermal receipt printer in a truck. Does a technician still know what to do? That is the floor — and it is demonstrated live in the next section.</p>
+  </div>
+</section>
+
+<!-- 04 RECORD LAB -->
+<section id="record">
+  <div class="wrap">
+    <div class="snum">04 — The diagnostic record</div>
+    <h2>One record, six surfaces, one shrinking budget</h2>
+    <p class="lede">Switch surfaces and drag the character budget down. Watch fields fall away in the specified truncation order — and watch the headline, urgency, customer, equipment, and provenance survive to the floor. That irreducible core is the product.</p>
+
+    <div class="lab">
+      <div class="labbar">
+        <span class="lb">Surface</span>
+        <div class="seg" id="surfSeg">
+          <button data-s="fsm" aria-pressed="true">Deep FSM</button>
+          <button data-s="email" aria-pressed="false">Email</button>
+          <button data-s="sms" aria-pressed="false">SMS</button>
+          <button data-s="plain" aria-pressed="false">Plain text</button>
+          <button data-s="inbox" aria-pressed="false">Fallback inbox</button>
+        </div>
+        <span class="lb">Record</span>
+        <div class="seg" id="recSeg">
+          <button data-r="fault" aria-pressed="true">Fault</button>
+          <button data-r="pred" aria-pressed="false">Prediction</button>
+        </div>
+        <div class="seg" id="miscSeg" style="margin-left:auto">
+          <button data-m="anno" aria-pressed="false">Annotate control</button>
+          <button data-m="pro" aria-pressed="true">Pro tier</button>
+        </div>
+      </div>
+      <div class="labbody">
+        <div class="stage" id="stage"></div>
+        <div class="side">
+          <div class="blk budget">
+            <h5>Character budget</h5>
+            <input type="range" id="budget" min="240" max="900" value="900" step="10" aria-label="Character budget">
+            <div class="read"><span>Rendered</span><b><span id="usedCt">0</span> / <span id="budCt">900</span></b></div>
+            <div class="marks"><span>240 floor</span><span>400 typical</span><span>900 full</span></div>
+          </div>
+          <div class="blk">
+            <h5>Truncation ladder</h5>
+            <div class="fieldlist" id="ladder"></div>
+          </div>
+          <div class="blk">
+            <h5>Reading now</h5>
+            <p id="sideNote" style="font-size:13px;color:var(--ink-2);margin:0"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="note-inline"><strong>Try this:</strong> set the budget to 240 on the Plain text surface. What remains is what a dispatcher gets when a partner system truncates without asking. If that is still actionable, the record is designed correctly. Then switch to <em>Prediction</em> and turn <em>Pro tier</em> off — that is the redacted stub free-tier dealers receive, which is how tier merchandising survives syndication.</p>
+  </div>
+</section>
+
+<!-- 05 LIFECYCLE -->
+<section id="lifecycle">
+  <div class="wrap">
+    <div class="snum">05 — Lifecycle and visibility</div>
+    <h2>What Carrier can see depends on what the partner returns</h2>
+    <p class="lede">The record's lifecycle crosses systems Carrier does not control. Switch partner tier and watch the states go dark. This is the commercial crux of the strategy, rendered as a picture.</p>
+
+    <div class="lifewrap">
+      <div class="lifebar">
+        <span class="lb">Partner tier</span>
+        <div class="seg" id="tierSeg">
+          <button data-t="deep" aria-pressed="true">Deep — bidirectional API</button>
+          <button data-t="shallow" aria-pressed="false">Shallow — one-way create</button>
+          <button data-t="none" aria-pressed="false">None — no FSM</button>
+        </div>
+      </div>
+      <div class="lifebody">
+        <div class="chain" id="chain"></div>
+        <div class="visread">
+          <div><div class="big" id="visBig">8 / 8</div><div class="lb" style="color:var(--ink-4);font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase">States visible to Carrier</div></div>
+          <p class="lbl" id="visNote" style="margin:0"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="cols">
+      <div class="card"><span class="tag">Canary metric</span><h4>Delivered, never acted on</h4><p>If this climbs, Carrier is successfully piping content into a system that ignores it — the signature failure of this strategy, and one that looks like success on a delivery dashboard.</p></div>
+      <div class="card"><span class="tag">Canary metric</span><h4>Feed silence</h4><p>Any integration delivering zero records for 14 days is presumed broken until proven otherwise. A silently dead integration is the characteristic failure mode here and the hardest to notice.</p></div>
+      <div class="card"><span class="tag">Sizing question</span><h4>How big is "None"?</h4><p>A substantial share of small HVAC dealers run no FSM at all. If that share is large, the fallback inbox <em>is</em> the product for them — and Option C quietly converges with Option A at a smaller budget.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 TECH APP -->
+<section id="tech">
+  <div class="wrap">
+    <div class="snum">06 — Technician app</div>
+    <h2>The primary design deliverable</h2>
+    <p class="lede">Carrier owns this completely, and under Option C it carries the brand relationship the web portal surrenders. Phone, one hand, gloves on, bright sun or dark crawlspace, intermittent signal, customer watching.</p>
+
+    <div class="techwrap">
+      <div class="tphone">
+        <div class="tscreen">
+          <div class="tnav"><span class="bk">‹</span><span class="ti">Job · CP-4417</span></div>
+          <div class="ttabs" id="tTabs">
+            <button data-t="brief" aria-pressed="true">Brief</button>
+            <button data-t="diag" aria-pressed="false">Diagnosis</button>
+            <button data-t="checks" aria-pressed="false">Checks</button>
+            <button data-t="state" aria-pressed="false">State</button>
+            <button data-t="cap" aria-pressed="false">Outcome</button>
+          </div>
+          <div class="tbody" id="tBody"></div>
+        </div>
+      </div>
+      <div class="techside">
+        <div class="card"><span class="tag">Screen a — the signature</span><h4>Job brief</h4><p>Headline, urgency word, and the <strong>bring</strong> list surfaced <em>before</em> the tech leaves the shop. Designed to be read in three seconds in a truck before the door opens. This is the difference between one visit and two.</p></div>
+        <div class="card"><span class="tag">Screen c</span><h4>Check sequence</h4><p>Probability-ranked, tickable, <strong>fully functional offline</strong>. Tap the checks in the prototype — offline is a designed visual state, not an error.</p></div>
+        <div class="card"><span class="tag">Screen e — strategically critical</span><h4>Outcome capture</h4><p>The only reliable ground truth in the entire architecture. It feeds prediction accuracy, proves value, and survives a partner refusing to return data. <strong>Must be completable in under 60 seconds, in gloves.</strong> If it takes longer it will not be filled in, and the strategy loses its only measurement instrument.</p></div>
+        <div class="card"><span class="tag">Everything else</span><h4>Advanced detail, collapsed</h4><p>The ~50 configuration fields survive, grouped by function — airflow &amp; duct · staging &amp; capacity · accessories · zoning · diagnostics · utility rates. Never the first thing on screen.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 07 CONTENT -->
+<section id="content">
+  <div class="wrap">
+    <div class="snum">07 — Content</div>
+    <h2>In the uncontrolled tier, the words are the entire interface</h2>
+    <p class="lede">No layout, no colour, no interaction. Content is not decoration on this product — it is the product. Pattern: <strong>headline</strong> (what) → <strong>consequence</strong> (why it matters) → <strong>first checks</strong> (what to do) → <strong>bring</strong> (what it probably needs).</p>
+    <table>
+      <thead><tr><th style="width:56px">Code</th><th>Current display</th><th>Record headline</th><th style="width:110px">Urgency</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">184</td><td class="mono">IDU DISSIP. BOARD COMM FAULT</td><td><strong>Indoor unit has lost communication with the control</strong></td><td class="mono" style="color:var(--today)">Today</td></tr>
+        <tr><td class="mono">180</td><td class="mono">ZONE 1-4 COMMUNICATION FAULT</td><td><strong>Zone controls are not responding</strong></td><td class="mono" style="color:var(--today)">Today</td></tr>
+        <tr><td class="mono">31</td><td class="mono">HIGH PRESSURE SWITCH OPEN</td><td><strong>System shutting down on high pressure</strong></td><td class="mono" style="color:var(--today)">Today</td></tr>
+        <tr><td class="mono">41</td><td class="mono">BLOWER MOTOR FAULT</td><td><strong>Blower motor has faulted — no indoor airflow</strong></td><td class="mono" style="color:var(--today)">Today</td></tr>
+        <tr><td class="mono">72 / 71</td><td class="mono">THERMAL CUTOUT HIGH/LOW STAGE</td><td><strong>Heating is cutting out on temperature limit</strong></td><td class="mono" style="color:var(--today)">Today</td></tr>
+        <tr><td class="mono">16</td><td class="mono">COMMUNICATION ERROR</td><td><strong>Equipment is intermittently dropping off the network</strong></td><td class="mono" style="color:var(--infl)">This week</td></tr>
+        <tr><td class="mono">26</td><td class="mono">INVALID HEATER SIZE</td><td><strong>Heater size is misconfigured for this system</strong></td><td class="mono" style="color:var(--infl)">This week</td></tr>
+        <tr><td class="mono">27</td><td class="mono">INVALID AC/HP SIZE</td><td><strong>Equipment size is misconfigured for this system</strong></td><td class="mono" style="color:var(--ink-3)">Watch</td></tr>
+        <tr><td class="mono">56</td><td class="mono">TEMP SENSOR OUT OF RANGE</td><td><strong>Temperature sensor is reading out of range</strong></td><td class="mono" style="color:var(--ink-3)">Watch</td></tr>
+        <tr><td class="mono">160</td><td class="mono">HUMIDITY SENSOR FAULT</td><td><strong>Humidity sensor has failed</strong></td><td class="mono" style="color:var(--ink-3)">Watch</td></tr>
+      </tbody>
+    </table>
+
+    <div class="cols">
+      <div class="card"><span class="tag">Voice rule</span><h4>Front-load the noun</h4><p>"Blower motor has faulted," not "A fault has been detected on the blower motor." Dispatchers scan the first three words.</p></div>
+      <div class="card"><span class="tag">Voice rule</span><h4>Three words, not a scale</h4><p><em>Today · This week · Watch.</em> In a foreign system there is no legend and no brand palette. <code>P1</code> carries nothing. <code>Today</code> carries everything.</p></div>
+      <div class="card"><span class="tag">Voice rule</span><h4>No sentence needs a second one</h4><p>Any line may be the last that survives truncation. Each must stand alone.</p></div>
+      <div class="card"><span class="tag">Voice rule</span><h4>State confidence on predictions</h4><p>A prediction arriving with no fault code behind it will be disbelieved by default. "Detected — high confidence, six weeks of performance data."</p></div>
+      <div class="card"><span class="tag">Voice rule</span><h4>No Carrier-internal vocabulary</h4><p>No "IDU," no "dissipation board," no model-family shorthand in the headline. Those belong in evidence.</p></div>
+      <div class="card"><span class="tag">Voice rule</span><h4>Sentence case</h4><p>Foreign systems will already be shouting. Carrier records should read as the calm thing on the screen.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 08 BRAND -->
+<section id="brand">
+  <div class="wrap">
+    <div class="snum">08 — Disintermediation</div>
+    <h2>Four countermeasures, honestly partial</h2>
+    <p class="lede">The strategy's central risk is becoming an invisible data supplier. These are the defences. Design should implement them without making Carrier records look like advertising — a record that reads as marketing gets ignored.</p>
+    <div class="cols">
+      <div class="card"><span class="tag">01</span><h4>Provenance never truncates</h4><p><code>Diagnosed by Carrier Connected Portal · CP-4417</code>. Quiet, factual, always present — verify it in the record lab at the 240-character floor.</p></div>
+      <div class="card"><span class="tag">02</span><h4>The technician app is the relationship</h4><p>Deep links from every syndicated record open the Carrier app. This is the one daily-use surface Carrier keeps, which is why §06 gets the design budget.</p></div>
+      <div class="card"><span class="tag">03</span><h4>Tier merchandising travels</h4><p>On a free tier a prediction is delivered as a redacted stub: the fact that a prediction exists, without the diagnosis. Silence sells nothing; a visible locked door does.</p></div>
+      <div class="card"><span class="tag">04</span><h4>Outcome capture stays Carrier-side</h4><p>Carrier retains the ground-truth dataset even where a partner returns nothing. This is also the only defence that cannot be negotiated away by a partner.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 09 DESIGN -->
+<section id="design">
+  <div class="wrap">
+    <div class="snum">09 — Design direction</div>
+    <h2>Quiet portal, bold app, typographically neutral payload</h2>
+    <div class="cols">
+      <div class="card"><span class="tag">The remaining portal</span><h4>The aesthetic of a status page</h4><p>Quiet, dense, administrative, fast. No hero metrics, no counter tiles, no sparklines. Its thesis is <em>reliability</em>, not engagement. Its job is to be legible at a glance and then let the person leave.</p></div>
+      <div class="card"><span class="tag">Technician app</span><h4>Where the boldness goes</h4><p>Large type, high contrast, generous targets. Sunlight, gloves, one hand. Mono for serials sized to scan against a physical nameplate at arm's length.</p></div>
+      <div class="card"><span class="tag">Signature element</span><h4>The job brief card</h4><p>Headline, urgency word, bring list — read in three seconds before the door opens. Everything else in the app can be restrained; this is the moment that makes it feel like it is on the technician's side.</p></div>
+      <div class="card"><span class="tag">Content-as-interface</span><h4>Plain-text specimens are comps</h4><p>Deliver the record in unstyled monospace, proving hierarchy holds with no visual assistance. Review these with the same seriousness as a screen. If the specimen is unclear, no downstream styling will save it.</p></div>
+      <div class="card"><span class="tag">Offline</span><h4>A visual state, not an error</h4><p>Design what a cached record looks like and what pending sync looks like. Errors say what happened and what to do next.</p></div>
+      <div class="card"><span class="tag">Accessibility floor</span><h4>Colour was never load-bearing</h4><p>AA contrast, full keyboard operation, app usable at 200% text. Urgency is never colour-alone — conveniently already true, because in the uncontrolled tier there is no colour at all.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 MEASURE -->
+<section id="measure">
+  <div class="wrap">
+    <div class="snum">10 — Measurement</div>
+    <h2>If this works, portal logins go down</h2>
+    <p class="lede">This strategy deliberately removes the metric the business currently uses. Anyone judging Option C on portal engagement will conclude it failed while it is working. Agree the framework before build — it is a precondition, not a Phase 4 reporting task.</p>
+    <table>
+      <thead><tr><th style="width:130px">Visibility</th><th>Metric</th><th style="width:120px">Target</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tierchip owned"><span class="sq owned"></span>Always</span></td><td>Delivery success rate across all tiers</td><td><strong>&gt; 98%</strong></td></tr>
+        <tr><td><span class="tierchip owned"><span class="sq owned"></span>Always</span></td><td><strong>Technician app — records opened before arrival.</strong> The proxy for the whole strategy working</td><td><strong>≥ 60%</strong></td></tr>
+        <tr><td><span class="tierchip owned"><span class="sq owned"></span>Always</span></td><td><strong>Outcome capture completion.</strong> The measurement instrument — if this fails, everything downstream is guesswork</td><td><strong>≥ 50%</strong></td></tr>
+        <tr><td><span class="tierchip owned"><span class="sq owned"></span>Always</span></td><td>Diagnosis confirmed by technician on site</td><td><strong>≥ 70%</strong></td></tr>
+        <tr><td><span class="tierchip infl"><span class="sq infl"></span>Read-back</span></td><td>Record → job conversion rate</td><td><strong>≥ 40%</strong></td></tr>
+        <tr><td><span class="tierchip infl"><span class="sq infl"></span>Read-back</span></td><td>Median time from detection to scheduled work</td><td><strong>&lt; 48 hrs</strong></td></tr>
+        <tr><td><span class="tierchip unctrl"><span class="sq unctrl"></span>Lagging</span></td><td>First-time fix rate, callback rate, connection growth, dealer retention</td><td>Baseline</td></tr>
+        <tr><td><span class="tierchip unctrl"><span class="sq unctrl"></span>Lagging</span></td><td><strong>Attribution survey</strong> — did this produce work you would otherwise have missed?</td><td>Quarterly</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 11 SEQUENCE -->
+<section id="sequence">
+  <div class="wrap">
+    <div class="snum">11 — Sequencing</div>
+    <h2>Own what you own first</h2>
+    <div style="margin-top:26px">
+      <div class="pstep"><div class="ph">Phase 1</div><h4>Build the payload</h4><p>Grouping engine, plain-language content library, record schema, truncation ladder, plain-text specimens. No integrations. Shared prerequisite with Option A.</p></div>
+      <div class="pstep"><div class="ph">Phase 2</div><h4>Own what you own</h4><p>Ship the technician app against the new record, including outcome capture. <strong>No partner dependency.</strong> Delivers standalone value, establishes ground truth, de-risks everything after it.</p></div>
+      <div class="pstep"><div class="ph">Phase 3</div><h4>One deep partner, done properly</h4><p>A single reference integration with full read-back. Prove the loop end to end. Five shallow integrations teach nothing and are unmeasurable.</p></div>
+      <div class="pstep"><div class="ph">Phase 4</div><h4>Cover the long tail</h4><p>Fallback inbox, structured email, SMS, print/export for the no-FSM segment. Move earlier if that segment turns out to be large.</p></div>
+      <div class="pstep"><div class="ph">Phase 5</div><h4>Scale and instrument</h4><p>Additional partners at shallow tier, feed health monitoring, proof-of-value screen, prediction accuracy loop.</p></div>
+    </div>
+    <div class="tradeoff">
+      <div class="t">The failure mode</div>
+      <p>Starting at Phase 3. Announcing partner integrations before the content library is right ships raw codes into partner systems, trains dispatchers to ignore Carrier records, and burns integrations that will not be re-earned. Partner trust is spent once.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 12 QUESTIONS -->
+<section id="questions">
+  <div class="wrap">
+    <div class="snum">12 — Open questions</div>
+    <h2>Answer before design finalises</h2>
+    <ol class="qlist">
+      <li><span><b>Does Carrier have the commercial leverage to require outcome read-back as a condition of the feed?</b> Without it, half the lifecycle is invisible and the strategy is largely unmeasurable outside the technician app. The single most important question here — and a BD question, not a product one.</span></li>
+      <li><span><b>What share of the dealer base runs no FSM at all?</b> If large, the fallback inbox is the main product rather than an edge case, and Option C converges with Option A for that segment.</span></li>
+      <li><span><b>Does the technician app have enough daily active use to carry the brand relationship?</b> The entire disintermediation defence rests on this. If adoption is weak today, it must be fixed in Phase 2 or the strategy has no anchor.</span></li>
+      <li><span>Can Pro tiers be merchandised inside a syndicated record, or does the business model need to shift toward per-record or data licensing?</span></li>
+      <li><span>Who owns partner relationships — product, channel, or BD? Unclear ownership is the most common way strategies of this shape stall.</span></li>
+      <li><span>Which FSM platforms cover the largest share of connected dealers, and what are their actual API capabilities? Tier assignment cannot be designed against assumptions.</span></li>
+    </ol>
+  </div>
+</section>
+
+<footer><div class="wrap">Connected Portal — The Invisible Portal · PRD v1.0 · Draft for design exploration. Prototypes above are concept demonstrations, not production code. All customer names, addresses and serials are fictional. Host FSM rendering is a generic mock, not a specific vendor.</div></footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============ DATA ============ */
+const RECORDS = {
+  fault:{
+    id:'CP-4417', urgency:'TODAY', urgClass:'today',
+    headline:'Blower motor has faulted, no indoor airflow',
+    consequence:'No air is moving through the house. Even if the outdoor unit runs, the homeowner gets nothing.',
+    checks:['Blower motor windings and ECM module','Static pressure against 0.5 IN.WC verification','Filter condition (26% life used — unlikely)'],
+    bring:'ECM blower module, motor',
+    customer:'Marcus Ellery', addr:'812 Palmetto Way, Bayshore FL 33440', phone:'954-555-0148',
+    equip:'Infinity Fan Coil FE4ANF005L00EEAA', serial:'9003F400033',
+    evidence:'41-BLOWER MOTOR FAULT x2, 16-COMMUNICATION ERROR x1, since 07:14 today',
+    confidence:null,
+    state:[['Blower RPM','0 RPM'],['Indoor airflow','0 CFM'],['Static pressure','0.5 IN.WC'],['Blower hours','16,504'],['Connection','Online']]
+  },
+  pred:{
+    id:'CP-4482', urgency:'THIS WEEK', urgClass:'week',
+    headline:'Refrigerant leaking slowly, unit performance degrading',
+    consequence:'The homeowner is paying more for less cooling and does not know it. Left alone this becomes a compressor failure in peak season.',
+    checks:['Leak-search evaporator coil and line set connections','Weigh in and compare against nameplate charge','Superheat and subcooling against design'],
+    bring:'Leak detector, refrigerant scale, R-410A',
+    customer:'Dana Whitfield', addr:'55 Chandler Ave, Fairmont IN 46220', phone:'317-555-0192',
+    equip:'Infinity Touch Control SYSTXCCITC01-C', serial:'9002W400022',
+    evidence:'No fault code. Capacity -14% and runtime +22% over 6 weeks',
+    confidence:'Detected — high confidence, six weeks of performance data',
+    state:[['Capacity trend','−14% / 6 wks'],['Runtime trend','+22%'],['Fault codes','None yet'],['Confidence','High'],['Connection','Online']]
+  }
+};
+
+/* field order = truncation ladder. core = never dropped */
+const LADDER = [
+  {k:'headline',  n:'Headline',      core:true},
+  {k:'urgency',   n:'Urgency',       core:true},
+  {k:'customer',  n:'Customer',      core:true},
+  {k:'equipment', n:'Equipment',     core:true},
+  {k:'prov',      n:'Provenance',    core:true},
+  {k:'consequence',n:'Consequence',  core:false},
+  {k:'checks',    n:'First checks',  core:false},
+  {k:'bring',     n:'Bring',         core:false},
+  {k:'evidence',  n:'Evidence',      core:false},
+  {k:'confidence',n:'Confidence',    core:false}
+];
+
+let S = {surface:'fsm', rec:'fault', budget:900, anno:false, pro:true};
+
+function parts(r){
+  return {
+    headline: r.headline,
+    urgency: r.urgency,
+    customer: r.customer + ', ' + r.addr,
+    equipment: r.equip + ' / SN ' + r.serial,
+    prov: 'Diagnosed by Carrier Connected Portal · ' + r.id,
+    consequence: r.consequence,
+    checks: r.checks,
+    bring: r.bring,
+    evidence: r.evidence,
+    confidence: r.confidence
+  };
+}
+
+/* which fields fit inside the budget */
+function fit(){
+  const r = RECORDS[S.rec];
+  const p = parts(r);
+  const redact = (S.rec==='pred' && !S.pro);
+  const inc = {}; let used = 0;
+  LADDER.forEach(f=>{
+    let v = p[f.k];
+    if(f.k==='checks') v = v ? v.join('; ') : '';
+    if(!v){ inc[f.k]=false; return; }
+    if(redact && ['consequence','checks','bring','evidence','confidence'].includes(f.k)){ inc[f.k]=false; return; }
+    const cost = String(v).length + 12;
+    if(f.core || used + cost <= S.budget){ inc[f.k]=true; used += cost; }
+    else inc[f.k]=false;
+  });
+  return {inc, used, p, r, redact};
+}
+
+function plainText(){
+  const {inc,p,redact,r} = fit();
+  const L = [];
+  L.push(p.urgency + ' — ' + p.headline);
+  L.push('');
+  if(inc.customer) L.push(p.customer);
+  if(inc.equipment) L.push(p.equipment);
+  if(redact){
+    L.push('');
+    L.push('A predicted failure has been detected on this system.');
+    L.push('Full diagnosis available on Connected Portal Pro.');
+  }
+  if(inc.consequence){ L.push(''); L.push(p.consequence); }
+  if(inc.checks){ L.push(''); L.push('Check first:'); p.checks.forEach((c,i)=>L.push('  '+(i+1)+'. '+c)); }
+  if(inc.bring){ L.push(''); L.push('Bring: '+p.bring); }
+  if(inc.evidence){ L.push(''); L.push('Evidence: '+p.evidence); }
+  if(inc.confidence) L.push(p.confidence);
+  L.push('');
+  L.push(p.prov);
+  return L.join('\n');
+}
+
+const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ============ RENDERERS ============ */
+function renderStage(){
+  const {inc,used,p,r,redact} = fit();
+  document.getElementById('usedCt').textContent = used;
+  document.getElementById('budCt').textContent = S.budget;
+
+  document.getElementById('ladder').innerHTML = LADDER.map(f=>{
+    const on = inc[f.k];
+    const cls = f.core ? 'core' : (on ? 'in' : '');
+    return `<div class="${cls}"><span>${f.n}</span><span class="st">${f.core?'core':(on?'in':'dropped')}</span></div>`;
+  }).join('');
+
+  const notes = {
+    fsm:'Deep tier. Carrier specifies field mapping, content and order. The host owns type, colour, spacing and chrome — turn on Annotate control to see the split.',
+    email:'Shallow tier. Hierarchy is carried entirely by word order and line breaks. The subject line is a design decision: headline plus urgency plus customer, inside a mobile preview pane.',
+    sms:'Uncontrolled. 160 characters, no formatting. Only the irreducible core survives — which is exactly why the core is defined the way it is.',
+    plain:'Uncontrolled. The thermal-receipt test. If a technician can work from this with no styling at all, the record is designed correctly.',
+    inbox:'Owned. The fallback for dealers with no FSM. Deliberately minimal: urgency-grouped, plain-language, built to get a job onto a truck.'
+  };
+  document.getElementById('sideNote').textContent = notes[S.surface];
+
+  const stage = document.getElementById('stage');
+  stage.className = 'stage' + (S.anno && S.surface==='fsm' ? ' anno' : '');
+  stage.innerHTML = ({fsm:rFSM, email:rEmail, sms:rSMS, plain:rPlain, inbox:rInbox})[S.surface](inc,p,r,redact);
+}
+
+function rFSM(inc,p,r,redact){
+  const co = S.anno ? 'carrier-owned' : '';
+  const ho = S.anno ? 'host-owned' : '';
+  let notes = '';
+  if(redact){
+    notes = 'A predicted failure has been detected on this system.\nFull diagnosis available on Connected Portal Pro.';
+  } else {
+    const L=[];
+    if(inc.consequence) L.push(p.consequence);
+    if(inc.checks){ L.push(''); L.push('Check first:'); p.checks.forEach((c,i)=>L.push('  '+(i+1)+'. '+c)); }
+    if(inc.bring){ L.push(''); L.push('Bring: '+p.bring); }
+    if(inc.evidence){ L.push(''); L.push('Evidence: '+p.evidence); }
+    if(inc.confidence) L.push(p.confidence);
+    notes = L.join('\n') || '—';
+  }
+  return `<div class="render">
+    <div class="rlabel">Deep tier · mapped to native job fields in a partner FSM</div>
+    <div class="host">
+      <div class="hostbar ${ho}"><span class="hlogo">DISPATCH<span style="opacity:.6">OS</span></span><span class="hnav"><span>Jobs</span><span>Board</span><span>Customers</span><span>Reports</span></span></div>
+      <div class="hostbody">
+        <div class="hostrow"><span class="k">Job</span><span class="v mn ${ho}">#J-20418 · New</span></div>
+        <div class="hostrow"><span class="k">Priority</span><span class="v"><span class="hostpri ${co}">${esc(p.urgency)}</span></span></div>
+        <div class="hostrow"><span class="k">Description</span><span class="v ${co}"><strong>${esc(p.headline)}</strong></span></div>
+        <div class="hostrow"><span class="k">Customer</span><span class="v ${co}">${esc(r.customer)}<br><span class="mn">${esc(r.phone)}</span></span></div>
+        <div class="hostrow"><span class="k">Address</span><span class="v ${co}">${esc(r.addr)}</span></div>
+        <div class="hostrow"><span class="k">Equipment</span><span class="v mn ${co}">${esc(p.equipment)}</span></div>
+        <div class="hostrow"><span class="k">Notes</span><span class="v"><div class="notes ${co}">${esc(notes)}</div><div class="prov ${co}">${esc(p.prov)}</div></span></div>
+        <div class="hostrow"><span class="k">Assign</span><span class="v ${ho}" style="color:var(--host);font-weight:600">Unassigned — choose technician</span></div>
+      </div>
+    </div>
+    ${S.anno?`<div class="annokey"><span><i style="border-color:var(--owned)"></i>Carrier specifies</span><span><i style="border-color:var(--infl)"></i>Host controls</span></div>`:''}
+  </div>`;
+}
+
+function rEmail(inc,p,r,redact){
+  const body = plainText().split('\n').slice(2).join('\n');
+  return `<div class="render">
+    <div class="rlabel">Shallow tier · structured email to a shared dispatch inbox</div>
+    <div class="mail">
+      <div class="mailhd">
+        <div class="subj">${esc(p.urgency)} — ${esc(p.headline)} — ${esc(r.customer)}</div>
+        <div class="frm">connected-portal@carrier.com → dispatch@dealer.com</div>
+      </div>
+      <div class="mailbody">${esc(body.trim())}</div>
+    </div>
+  </div>`;
+}
+
+function rSMS(inc,p,r,redact){
+  let t = p.urgency+' — '+p.headline+'. '+r.customer+', '+r.addr.split(',')[0]+'. '+p.equipment.split(' SN')[0]+'. Carrier CP-'+r.id.split('-')[1];
+  const over = t.length > 160;
+  const shown = over ? t.slice(0,157)+'…' : t;
+  return `<div class="render">
+    <div class="rlabel">Uncontrolled · 160 characters, no formatting</div>
+    <div class="phoneframe"><div class="phonescreen">
+      <div class="bubble">${esc(shown)}</div>
+      <div class="smsmeta ${over?'smsover':''}">${t.length} chars${over?' — truncated at 160':''}</div>
+      <div class="bubble" style="margin-top:14px;background:#EDF3F2;border-color:var(--owned-l)">Open full diagnosis in Carrier app →</div>
+      <div class="smsmeta">deep link · owned surface</div>
+    </div></div>
+  </div>`;
+}
+
+function rPlain(inc,p,r,redact){
+  return `<div class="render">
+    <div class="rlabel">Uncontrolled · the thermal-receipt test</div>
+    <div class="receipt">${esc(plainText())}</div>
+  </div>`;
+}
+
+function rInbox(inc,p,r,redact){
+  const other = S.rec==='fault' ? RECORDS.pred : RECORDS.fault;
+  const row = (rr,active)=>`<div class="inrow" style="${active?'':'opacity:.6'}">
+    <div>
+      <div class="inurg ${rr.urgency==='TODAY'?'':'wk'}">${esc(rr.urgency)}</div>
+      <div class="intitle">${esc(rr.headline)}</div>
+      <div class="inmeta">${esc(rr.customer)} · ${esc(rr.addr.split(',').slice(1).join(',').trim())} · ${esc(rr.equip.split(' ').slice(0,3).join(' '))}</div>
+    </div>
+    <div class="inacts"><button class="btn">Print</button><button class="btn">Text to tech</button><button class="btn primary">Open</button></div>
+  </div>`;
+  return `<div class="render">
+    <div class="rlabel">Owned · fallback for dealers running no FSM</div>
+    <div class="inbox">
+      <div class="inboxhd"><span class="lg">HVAC <span>PARTNERS</span></span><span>Records</span><span class="tg">no FSM connected</span></div>
+      ${row(r,true)}
+      ${row(other,false)}
+    </div>
+  </div>`;
+}
+
+/* ============ CONTROLS ============ */
+function seg(id, key, cb){
+  document.getElementById(id).addEventListener('click', e=>{
+    const b = e.target.closest('button'); if(!b) return;
+    [...b.parentNode.children].forEach(x=>x.setAttribute('aria-pressed','false'));
+    b.setAttribute('aria-pressed','true');
+    cb(b.dataset[key]);
+  });
+}
+seg('surfSeg','s', v=>{ S.surface=v; renderStage(); });
+seg('recSeg','r', v=>{ S.rec=v; renderStage(); });
+document.getElementById('miscSeg').addEventListener('click', e=>{
+  const b = e.target.closest('button'); if(!b) return;
+  const on = b.getAttribute('aria-pressed')==='true';
+  b.setAttribute('aria-pressed', String(!on));
+  if(b.dataset.m==='anno') S.anno = !on;
+  if(b.dataset.m==='pro'){ S.pro = !on; if(S.rec!=='pred') toast('<b>Tier applies to predictions</b> — switch the record to Prediction to see the stub'); }
+  renderStage();
+});
+document.getElementById('budget').addEventListener('input', e=>{ S.budget = +e.target.value; renderStage(); });
+
+/* ============ LIFECYCLE ============ */
+const CHAIN = [
+  {n:'Detected',  w:'Carrier', d:'Grouping and translation produce a record'},
+  {n:'Delivered', w:'Carrier', d:'Pushed to FSM, app, email or inbox'},
+  {n:'Accepted',  w:'Partner', d:'Host system created something from it'},
+  {n:'Converted', w:'Partner', d:'A job or work order exists'},
+  {n:'Dispatched',w:'Partner', d:'Assigned to a technician'},
+  {n:'In hand',   w:'Carrier', d:'Technician opens it in the Carrier app'},
+  {n:'Resolved',  w:'Carrier', d:'Outcome captured — what was found'},
+  {n:'Learned',   w:'Carrier', d:'Outcome feeds prediction accuracy'}
+];
+const TIERVIS = {
+  deep:{dark:[], note:'Full loop. Carrier sees conversion, dispatch and outcome — which means Option C can be measured against the business case rather than inferred from it. This is the only tier where "did it produce work?" has a real answer.'},
+  shallow:{dark:[2,3,4], note:'Carrier delivers and then goes blind until a technician opens the record in the Carrier app. Conversion rate is unknowable; the technician app becomes the sole evidence the strategy is working.'},
+  none:{dark:[2,3,4], note:'No partner system at all. Carrier owns both ends — delivery into the fallback inbox and outcome from the app — but there is no dispatch board in between, so the middle states simply do not exist. For this segment, Option C is Option A with a smaller budget.'}
+};
+function renderChain(tier){
+  const cfg = TIERVIS[tier];
+  document.getElementById('chain').innerHTML = CHAIN.map((c,i)=>{
+    const dark = cfg.dark.includes(i);
+    return `<div class="node ${dark?'dark':'lit'}"><div class="who">${c.w}</div><div class="nm">${c.n}</div><div class="ds">${c.d}</div></div>`;
+  }).join('');
+  document.getElementById('visBig').textContent = (8-cfg.dark.length)+' / 8';
+  document.getElementById('visNote').textContent = cfg.note;
+}
+seg('tierSeg','t', v=>renderChain(v));
+
+/* ============ TECH APP ============ */
+let tTab='brief';
+let checksDone=[false,false,false];
+let cap={found:null,note:''};
+const TR = RECORDS.fault;
+
+function renderTech(){
+  const b = document.getElementById('tBody');
+  if(tTab==='brief'){
+    b.innerHTML = `
+      <div class="jobcard">
+        <div class="urg">TODAY</div>
+        <div class="hl">${esc(TR.headline)}</div>
+        <div class="addr"><strong>${esc(TR.customer)}</strong></div>
+        <div class="addr">${esc(TR.addr)}</div>
+        <div class="eq">${esc(TR.equip)}<br>SN ${esc(TR.serial)}</div>
+        <div class="bringbox"><div class="bl">Bring</div><div class="bv">${esc(TR.bring)}</div></div>
+      </div>
+      <div class="tmini"><h6>Why it matters</h6><p>${esc(TR.consequence)}</p></div>
+      <div style="display:flex;gap:8px;margin-top:12px"><button class="btn primary" style="flex:1">Navigate</button><button class="btn" style="flex:1">Call customer</button></div>`;
+  }
+  if(tTab==='diag'){
+    b.innerHTML = `
+      <div class="tmini"><h6>What is happening</h6><p>${esc(TR.headline)}. The fault has repeated twice this morning and indoor airflow has dropped to zero.</p></div>
+      <div class="tmini"><h6>Evidence</h6><p style="font-family:var(--mono);font-size:11.5px;line-height:1.7">${esc(TR.evidence)}</p></div>
+      <div class="tmini"><h6>Confidence</h6><p>Fault-driven — reported by the equipment, not predicted. No interpretation applied.</p></div>
+      <details class="tmini" style="padding:0"><summary style="padding:14px;font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3);cursor:pointer">Advanced — configuration &amp; counters</summary>
+      <div style="padding:0 14px 14px;font-family:var(--mono);font-size:11px;color:var(--ink-4);line-height:1.9">Airflow &amp; duct · Staging &amp; capacity · Accessories · Zoning · Diagnostics &amp; sensors · Utility rates</div></details>`;
+  }
+  if(tTab==='checks'){
+    b.innerHTML = `
+      <div class="offline">Offline — cached 06:52. Ticks will sync.</div>
+      <div class="tmini"><h6>Check in this order</h6>
+        ${TR.checks.map((c,i)=>`<div class="chk ${checksDone[i]?'done':''}" data-c="${i}"><span class="chkbox">${checksDone[i]?'✓':''}</span><span class="chktext"><span class="chknum">Check ${i+1}</span>${esc(c)}</span></div>`).join('')}
+      </div>
+      <div class="tmini"><h6>Bring</h6><p>${esc(TR.bring)}</p></div>`;
+  }
+  if(tTab==='state'){
+    b.innerHTML = `<div class="tmini"><h6>Live system state</h6><div class="kv">${TR.state.map(([k,v])=>`<div><span>${esc(k)}</span><span>${esc(v)}</span></div>`).join('')}</div></div>
+    <div class="tmini"><h6>Last verification</h6><div class="kv"><div><span>Static pressure</span><span>0.5 IN.WC</span></div><div><span>Calculated min CFM</span><span>491 CFM</span></div><div><span>Duct blower RPM</span><span>1,010 RPM</span></div></div></div>`;
+  }
+  if(tTab==='cap'){
+    b.innerHTML = `
+      <div class="tmini cap">
+        <h6>Was the diagnosis right?</h6>
+        <div class="opts">
+          <button data-f="yes" aria-pressed="${cap.found==='yes'}">Confirmed</button>
+          <button data-f="partial" aria-pressed="${cap.found==='partial'}">Partly</button>
+          <button data-f="no" aria-pressed="${cap.found==='no'}">No — other</button>
+        </div>
+        <label>What did you find?</label>
+        <textarea id="capNote" placeholder="ECM module failed, replaced.">${esc(cap.note)}</textarea>
+        <label>Parts used</label>
+        <div class="opts"><button aria-pressed="false">ECM module</button><button aria-pressed="false">Motor</button><button aria-pressed="false">Other</button></div>
+        <div class="timerbar"><span>Target: under 60 seconds, in gloves</span><b>3 taps + 1 field</b></div>
+      </div>
+      <button class="btn primary" style="width:100%;margin-top:12px" id="capSave">Save outcome</button>`;
+  }
+}
+document.getElementById('tTabs').addEventListener('click', e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  [...b.parentNode.children].forEach(x=>x.setAttribute('aria-pressed','false'));
+  b.setAttribute('aria-pressed','true'); tTab=b.dataset.t; renderTech();
+});
+document.getElementById('tBody').addEventListener('click', e=>{
+  const c=e.target.closest('[data-c]');
+  if(c){ const i=+c.dataset.c; checksDone[i]=!checksDone[i]; renderTech(); return; }
+  const f=e.target.closest('[data-f]');
+  if(f){ cap.note=document.getElementById('capNote')?.value||cap.note; cap.found=f.dataset.f; renderTech(); return; }
+  if(e.target.closest('#capSave')){
+    cap.note=document.getElementById('capNote')?.value||'';
+    if(!cap.found){ toast('Pick whether the diagnosis was right — that is the field that feeds accuracy'); return; }
+    toast('<b>Outcome saved</b> — feeds prediction accuracy and proof of value');
+  }
+});
+
+function toast(m){
+  const t=document.getElementById('toast'); t.innerHTML=m; t.classList.add('show');
+  clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+/* scroll spy */
+const links=[...document.querySelectorAll('.railnav a')];
+const secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+const spy=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting){links.forEach(l=>l.classList.remove('on'));const i=secs.indexOf(en.target);if(i>-1)links[i].classList.add('on');}});},{rootMargin:'-70px 0px -70% 0px'});
+secs.forEach(s=>s&&spy.observe(s));
+
+renderStage(); renderChain('deep'); renderTech();
+</script>
+</body>
+</html>

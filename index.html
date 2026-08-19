@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Connected Portal — Experience Assessment &amp; Strategic Options</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Spline+Sans+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0E1316; --ink-2:#39434B; --ink-3:#67727B; --ink-4:#98A3AB;
+  --page:#EEF1F2; --surface:#FFFFFF; --line:#DCE2E5; --line-2:#EAEEF0;
+  --nav:#070909;
+
+  --optA:#C4300F; --optA-t:#FCEBE6; --optA-l:#F0C6B9;
+  --optB:#14432F; --optB-t:#E5EFEA; --optB-l:#B2CFC2;
+  --optC:#0B6E60; --optC-t:#E4F2EF; --optC-l:#B4DBD3;
+
+  --warn:#8A5A00; --warn-t:#FBF3E1; --warn-l:#E7D49F;
+  --stop:#C4300F;
+  --r:6px;
+  --sans:'Instrument Sans',system-ui,-apple-system,sans-serif;
+  --mono:'Spline Sans Mono',ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;scroll-padding-top:72px;}
+body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;}
+h1,h2,h3,h4,h5{margin:0;line-height:1.2;letter-spacing:-.02em;font-weight:600;}
+p{margin:0 0 .85em;}
+a{color:var(--optC);}
+code{font-family:var(--mono);font-size:.86em;}
+.wrap{max-width:1180px;margin:0 auto;padding:0 32px;}
+
+.masthead{background:var(--nav);color:#fff;padding:52px 0 46px;}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#8FC9B0;margin-bottom:14px;}
+.masthead h1{font-size:clamp(32px,5vw,58px);letter-spacing:-.034em;max-width:17ch;}
+.masthead .sub{color:#A3AEB5;margin-top:16px;font-size:18px;max-width:64ch;}
+.meta-row{display:flex;flex-wrap:wrap;gap:28px;margin-top:30px;padding-top:22px;border-top:1px solid #1F2528;}
+.meta-row div{font-size:13px;color:#78848C;}
+.meta-row strong{display:block;color:#E4EAED;font-weight:500;font-size:14px;margin-top:2px;}
+
+.railnav{position:sticky;top:0;z-index:40;background:rgba(238,241,242,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
+.railnav .wrap{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;}
+.railnav .wrap::-webkit-scrollbar{display:none;}
+.railnav a{font-family:var(--mono);font-size:11.5px;letter-spacing:.02em;text-transform:uppercase;color:var(--ink-3);text-decoration:none;padding:15px 13px;white-space:nowrap;border-bottom:2px solid transparent;}
+.railnav a:hover{color:var(--ink);}
+.railnav a.on{color:var(--ink);border-bottom-color:var(--optA);}
+
+section{padding:56px 0;border-bottom:1px solid var(--line);}
+.snum{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-4);margin-bottom:12px;}
+section h2{font-size:30px;letter-spacing:-.028em;margin-bottom:8px;}
+.lede{font-size:17px;color:var(--ink-2);max-width:74ch;}
+
+.diagnosis{background:var(--nav);color:#fff;border-radius:8px;padding:36px 40px;margin-top:26px;}
+.diagnosis .dt{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:#8FC9B0;margin-bottom:14px;}
+.diagnosis p{font-size:clamp(17px,2vw,21px);line-height:1.5;color:#DEE5E8;max-width:70ch;margin-bottom:0;letter-spacing:-.012em;}
+.diagnosis p strong{color:#fff;font-weight:600;}
+.diagnosis p + p{margin-top:16px;font-size:15.5px;color:#98A4AB;}
+
+/* verdicts */
+.verdicts{margin-top:26px;display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;}
+.vrow{background:var(--surface);padding:18px 22px;display:grid;grid-template-columns:210px 118px 1fr;gap:20px;align-items:start;}
+.vrow .vd{font-weight:600;font-size:14.5px;}
+.vrow .ve{font-size:14px;color:var(--ink-2);}
+.vbadge{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;padding:4px 9px;border-radius:3px;border:1px solid;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}
+.vbadge.weak{color:var(--stop);background:var(--optA-t);border-color:var(--optA-l);}
+.vbadge.adeq{color:var(--warn);background:var(--warn-t);border-color:var(--warn-l);}
+.vbadge.strong{color:var(--optB);background:var(--optB-t);border-color:var(--optB-l);}
+.vg{width:8px;height:8px;flex:none;}
+.vg.weak{background:var(--stop);}
+.vg.adeq{background:var(--warn);clip-path:polygon(50% 0,100% 100%,0 100%);}
+.vg.strong{border:1.5px solid var(--optB);border-radius:50%;}
+
+/* option cards */
+.opts{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:30px;}
+.opt{background:var(--surface);border:1px solid var(--line);border-top:4px solid;border-radius:8px;display:flex;flex-direction:column;overflow:hidden;transition:box-shadow .18s,transform .18s;}
+.opt:hover{box-shadow:0 18px 40px -26px rgba(8,10,11,.4);transform:translateY(-2px);}
+.opt.a{border-top-color:var(--optA);}
+.opt.b{border-top-color:var(--optB);}
+.opt.c{border-top-color:var(--optC);}
+.opthd{padding:22px 22px 0;}
+.optlabel{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px;}
+.opt.a .optlabel{color:var(--optA);}
+.opt.b .optlabel{color:var(--optB);}
+.opt.c .optlabel{color:var(--optC);}
+.opt h3{font-size:23px;letter-spacing:-.028em;margin-bottom:6px;}
+.opt .strap{font-size:13.5px;color:var(--ink-3);}
+.optbody{padding:18px 22px;flex:1;}
+.betline{font-size:15.5px;font-weight:600;letter-spacing:-.016em;line-height:1.4;padding:14px 16px;border-radius:5px;margin-bottom:16px;}
+.opt.a .betline{background:var(--optA-t);color:#8E2309;}
+.opt.b .betline{background:var(--optB-t);color:var(--optB);}
+.opt.c .betline{background:var(--optC-t);color:var(--optC);}
+.blk{margin-bottom:14px;}
+.blk .bl{font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-4);margin-bottom:5px;}
+.blk p{font-size:13.5px;color:var(--ink-2);margin:0;line-height:1.5;}
+.invest{display:flex;align-items:center;gap:9px;font-family:var(--mono);font-size:11px;color:var(--ink-3);padding-top:14px;border-top:1px solid var(--line-2);}
+.dots{display:flex;gap:3px;}
+.dots i{width:16px;height:5px;border-radius:2px;background:var(--line);display:block;}
+.opt.a .dots i.on{background:var(--optA);}
+.opt.b .dots i.on{background:var(--optB);}
+.opt.c .dots i.on{background:var(--optC);}
+
+.optfoot{border-top:1px solid var(--line);padding:16px 22px 20px;background:#FAFCFC;}
+.openbtn{display:block;text-align:center;text-decoration:none;font-size:14px;font-weight:600;padding:11px;border-radius:5px;color:#fff;margin-bottom:12px;}
+.opt.a .openbtn{background:var(--optA);}
+.opt.b .openbtn{background:var(--optB);}
+.opt.c .openbtn{background:var(--optC);}
+.openbtn:hover{filter:brightness(.9);}
+.jump{font-family:var(--mono);font-size:10.5px;letter-spacing:.02em;}
+.jump .jl{color:var(--ink-4);text-transform:uppercase;letter-spacing:.1em;margin-bottom:7px;display:block;}
+.jump a{display:block;color:var(--ink-2);text-decoration:none;padding:4px 0;border-bottom:1px solid var(--line-2);}
+.jump a:last-child{border-bottom:none;}
+.jump a::before{content:'→ ';color:var(--ink-4);}
+.jump a:hover{color:var(--ink);}
+.jump a:hover::before{color:inherit;}
+
+/* compare */
+table{width:100%;border-collapse:collapse;margin-top:26px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;font-size:14px;}
+th{text-align:left;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:500;padding:13px 16px;background:#F6F8F9;border-bottom:1px solid var(--line);}
+th.a{color:var(--optA);} th.b{color:var(--optB);} th.c{color:var(--optC);}
+td{padding:13px 16px;border-bottom:1px solid var(--line-2);vertical-align:top;color:var(--ink-2);}
+tr:last-child td{border-bottom:none;}
+td.rh{font-weight:600;color:var(--ink);width:180px;}
+td.mono{font-family:var(--mono);font-size:12.5px;}
+
+/* lens */
+.lens{margin-top:28px;background:var(--surface);border:1px solid var(--line);border-radius:9px;overflow:hidden;box-shadow:0 18px 44px -32px rgba(8,10,11,.4);}
+.lensbar{background:#12171A;padding:16px 20px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.lq .lqt{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:#6E7A82;margin-bottom:8px;}
+.seg{display:flex;background:#0A0D0F;border:1px solid #232A2E;border-radius:5px;overflow:hidden;}
+.seg button{flex:1;font-family:var(--mono);font-size:10px;letter-spacing:.03em;text-transform:uppercase;color:#828E96;background:none;border:none;padding:8px 6px;cursor:pointer;border-right:1px solid #232A2E;}
+.seg button:last-child{border-right:none;}
+.seg button[aria-pressed="true"]{background:#8FC9B0;color:#0A0D0F;font-weight:600;}
+.seg button:focus-visible{outline:2px solid #8FC9B0;outline-offset:-2px;}
+.lensbody{padding:24px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+.res{border:1px solid var(--line);border-left:3px solid;border-radius:6px;padding:18px;}
+.res h4{font-size:16px;margin-bottom:4px;}
+.res .st{font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:600;margin-bottom:10px;}
+.res p{font-size:13.5px;color:var(--ink-2);margin:0;}
+.res.go{border-left-color:var(--optB);background:var(--optB-t);}
+.res.go .st{color:var(--optB);}
+.res.cau{border-left-color:var(--warn);background:var(--warn-t);}
+.res.cau .st{color:var(--warn);}
+.res.stop{border-left-color:var(--stop);background:var(--optA-t);}
+.res.stop .st{color:var(--stop);}
+.lensfoot{padding:0 24px 22px;font-size:12.5px;color:var(--ink-3);}
+
+/* rec */
+.rec{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--optA);border-radius:8px;padding:30px 34px;margin-top:26px;}
+.rec .rt{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--optA);margin-bottom:12px;}
+.rec h3{font-size:24px;letter-spacing:-.026em;margin-bottom:12px;}
+.rec p{font-size:15.5px;color:var(--ink-2);max-width:76ch;}
+.question{background:var(--nav);color:#fff;border-radius:6px;padding:24px 28px;margin-top:22px;}
+.question .qt{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#8FC9B0;margin-bottom:10px;}
+.question .qq{font-size:clamp(18px,2.2vw,24px);font-weight:600;letter-spacing:-.024em;max-width:30ch;}
+.question p{color:#98A4AB;font-size:14.5px;margin:14px 0 0;max-width:68ch;}
+
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px;margin-top:26px;}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px;}
+.card h4{font-size:15px;margin-bottom:7px;}
+.card p{font-size:14.5px;color:var(--ink-2);margin-bottom:0;}
+.card .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-4);display:block;margin-bottom:9px;}
+
+.note-inline{font-size:13.5px;color:var(--ink-3);max-width:76ch;margin-top:16px;}
+footer{padding:40px 0 60px;color:var(--ink-4);font-size:13px;}
+footer code{background:#E4E9EB;padding:2px 6px;border-radius:3px;}
+
+@media(max-width:1000px){
+  .opts{grid-template-columns:1fr;}
+  .lensbar{grid-template-columns:1fr;}
+  .lensbody{grid-template-columns:1fr;}
+  .vrow{grid-template-columns:1fr;gap:8px;}
+}
+@media(max-width:640px){.wrap{padding:0 18px;}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;}html{scroll-behavior:auto;}}
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div class="wrap">
+    <div class="eyebrow">Experience assessment · Go / no-go input</div>
+    <h1>Connected Portal: three ways forward</h1>
+    <p class="sub">An assessment of the current dealer experience, three genuinely divergent strategies for what it could become, and a recommendation. Each option has its own full requirements document, linked below.</p>
+    <div class="meta-row">
+      <div>Subject<strong>Connected Portal, HVAC Partners</strong></div>
+      <div>Primary users<strong>Dealers &amp; service managers</strong></div>
+      <div>Assessed<strong>July 2026</strong></div>
+      <div>Read time<strong>5 minutes, then pick one</strong></div>
+    </div>
+  </div>
+</div>
+
+<nav class="railnav">
+  <div class="wrap">
+    <a href="#diagnosis">Diagnosis</a>
+    <a href="#verdicts">Current state</a>
+    <a href="#options">Three options</a>
+    <a href="#compare">Compare</a>
+    <a href="#lens">Decision lens</a>
+    <a href="#recommendation">Recommendation</a>
+    <a href="#using">Using these docs</a>
+  </div>
+</nav>
+
+<!-- DIAGNOSIS -->
+<section id="diagnosis">
+  <div class="wrap">
+    <div class="snum">01 — The core problem</div>
+    <h2>Stated as a business problem, not a UX problem</h2>
+    <div class="diagnosis">
+      <div class="dt">Diagnosis</div>
+      <p><strong>The business is generating valuable demand signals and giving away the value.</strong> Connected equipment produces exactly what a dealer's business needs — early warning of failures, evidence for service agreements, and justification for replacement quotes — but the portal is built as a system of record, not a system of action. It waits to be visited, defaults itself to silence, and hands the dealer raw fault codes instead of decisions.</p>
+      <p>The result is that Carrier absorbs the cost of the connected infrastructure while the revenue it enables is realized inconsistently or not at all. Low daily engagement is not the problem; it is the symptom of a product that has no daily job.</p>
+    </div>
+  </div>
+</section>
+
+<!-- VERDICTS -->
+<section id="verdicts">
+  <div class="wrap">
+    <div class="snum">02 — Current state</div>
+    <h2>Five dimensions, assessed</h2>
+    <div class="verdicts">
+      <div class="vrow">
+        <div class="vd">Clarity of purpose</div>
+        <div><span class="vbadge weak"><span class="vg weak"></span>Weak</span></div>
+        <div class="ve">The landing screen leads with five counters and a search box. Nothing tells a first-time dealer what to <em>do</em> — the screen reports inventory, not work.</div>
+      </div>
+      <div class="vrow">
+        <div class="vd">Task efficiency</div>
+        <div><span class="vbadge weak"><span class="vg weak"></span>Weak</span></div>
+        <div class="ve">Alert to understanding takes four screens and heavy scrolling, ending at ~50 raw configuration fields in flat alphabetical order — the equipment data model shown as a user interface.</div>
+      </div>
+      <div class="vrow">
+        <div class="vd">Trust &amp; transparency</div>
+        <div><span class="vbadge weak"><span class="vg weak"></span>Weak</span></div>
+        <div class="ve">Alerts appear as manufacturer codes with no plain meaning, cause, or action. Duplicates aren't collapsed — one property fired the same fault three times in a minute, so 96 alerts is an unknown number of real problems.</div>
+      </div>
+      <div class="vrow">
+        <div class="vd">Persona fit</div>
+        <div><span class="vbadge adeq"><span class="vg adeq"></span>Mixed</span></div>
+        <div class="ve">Adequate for a technically fluent technician doing post-hoc diagnosis. Weak for the service manager who must decide, in five minutes, which three customers get a truck. Distributors have no roll-up at all.</div>
+      </div>
+      <div class="vrow">
+        <div class="vd">Business alignment</div>
+        <div><span class="vbadge weak"><span class="vg weak"></span>Weak</span></div>
+        <div class="ve">Notifications default to <strong>None</strong> across every alert type. The highest-value capability — predictive malfunction detection — is Pro-gated <em>and</em> manual. 104 opportunities sit disconnected from the alerts that would justify them.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OPTIONS -->
+<section id="options">
+  <div class="wrap">
+    <div class="snum">03 — Three strategies</div>
+    <h2>Genuinely divergent, not three shades of the same idea</h2>
+    <p class="lede">Each is built on a different belief about why dealers don't engage. Choosing between them is a real strategic decision — they lead to different products, different org dependencies, and different definitions of success.</p>
+
+    <div class="opts">
+
+      <!-- A -->
+      <div class="opt a">
+        <div class="opthd">
+          <div class="optlabel">Option A</div>
+          <h3>The Service Desk</h3>
+          <div class="strap">Push-first triage queue</div>
+        </div>
+        <div class="optbody">
+          <div class="betline">Dealers will never habitually visit a portal, so the portal must arrive in their morning already sorted.</div>
+          <div class="blk"><div class="bl">What changes</div><p>Notifications default on. Duplicate faults collapse into single incidents. The home screen becomes a ranked list of what needs a human today, in plain language, with a one-click path to dispatch. Everything else moves behind the incident.</p></div>
+          <div class="blk"><div class="bl">Best case</div><p>The first screen a service manager opens each morning. Fault-to-dispatch time drops; inbound "my system is making a noise" calls decline because the dealer called first.</p></div>
+          <div class="blk"><div class="bl">Primary risk</div><p>Turning notifications on before deduplication and ranking are right floods dealers with noise and they mute permanently. A one-shot trust event.</p></div>
+          <div class="invest"><span>Investment</span><span class="dots"><i class="on"></i><i class="on"></i><i></i></span><span>Medium</span></div>
+        </div>
+        <div class="optfoot">
+          <a class="openbtn" href="connected-portal-service-desk.html">Open full PRD →</a>
+          <div class="jump">
+            <span class="jl">Jump to</span>
+            <a href="connected-portal-service-desk.html#proto">Live triage queue prototype</a>
+            <a href="connected-portal-service-desk.html#model">The Incident model</a>
+            <a href="connected-portal-service-desk.html#sequence">Sequencing &amp; failure mode</a>
+            <a href="connected-portal-service-desk.html#questions">Open questions</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- B -->
+      <div class="opt b">
+        <div class="opthd">
+          <div class="optlabel">Option B</div>
+          <h3>The Book of Business</h3>
+          <div class="strap">Account health and revenue tool</div>
+        </div>
+        <div class="optbody">
+          <div class="betline">Dealers engage with money, not machines; the unit of value is the customer relationship, not the control.</div>
+          <div class="blk"><div class="bl">What changes</div><p>The organising object flips from equipment to household. Each customer carries health, warranty, equipment age, agreement status and revenue at stake. Alerts stop being faults and become commercial triggers.</p></div>
+          <div class="blk"><div class="bl">Best case</div><p>The portal becomes the dealer's most valuable business asset rather than a warranty obligation. Connection rates rise because dealers actively want customers on the platform.</p></div>
+          <div class="blk"><div class="bl">Primary risk</div><p>Depends on data the portal may not hold — install dates, warranty terms, pricing. Wrong dollar figures destroy credibility faster than no dollar figures.</p></div>
+          <div class="invest"><span>Investment</span><span class="dots"><i class="on"></i><i class="on"></i><i class="on"></i></span><span>High</span></div>
+        </div>
+        <div class="optfoot">
+          <a class="openbtn" href="connected-portal-book-of-business.html">Open full PRD →</a>
+          <div class="jump">
+            <span class="jl">Jump to</span>
+            <a href="connected-portal-book-of-business.html#lab">Data completeness lab</a>
+            <a href="connected-portal-book-of-business.html#homeowner">Defensibility A/B</a>
+            <a href="connected-portal-book-of-business.html#money">The money rule</a>
+            <a href="connected-portal-book-of-business.html#gates">Readiness gates</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- C -->
+      <div class="opt c">
+        <div class="opthd">
+          <div class="optlabel">Option C</div>
+          <h3>The Invisible Portal</h3>
+          <div class="strap">Intelligence delivered into existing tools</div>
+        </div>
+        <div class="optbody">
+          <div class="betline">The right number of portal logins is zero; the signal should appear inside the software dealers already use all day.</div>
+          <div class="blk"><div class="bl">What changes</div><p>The destination experience is demoted. Diagnostics and predicted failures are pushed as structured records into the dealer's FSM and the technician app — a work order arriving pre-populated. The portal survives as thin administration.</p></div>
+          <div class="blk"><div class="bl">Best case</div><p>Adoption stops depending on behaviour change. Value is delivered whether or not anyone thinks about Carrier's portal, and the technician app gets meaningfully stronger.</p></div>
+          <div class="blk"><div class="bl">Primary risk</div><p>Carrier becomes a data supplier inside someone else's software, with reduced ability to merchandise Pro tiers or influence the dealer — and a roadmap hostage to third-party integration quality.</p></div>
+          <div class="invest"><span>Investment</span><span class="dots"><i class="on"></i><i class="on"></i><i></i></span><span>Low–medium build</span></div>
+        </div>
+        <div class="optfoot">
+          <a class="openbtn" href="connected-portal-invisible-portal.html">Open full PRD →</a>
+          <div class="jump">
+            <span class="jl">Jump to</span>
+            <a href="connected-portal-invisible-portal.html#record">Record renderer &amp; truncation</a>
+            <a href="connected-portal-invisible-portal.html#lifecycle">Lifecycle visibility</a>
+            <a href="connected-portal-invisible-portal.html#tech">Technician app prototype</a>
+            <a href="connected-portal-invisible-portal.html#questions">Open questions</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- COMPARE -->
+<section id="compare">
+  <div class="wrap">
+    <div class="snum">04 — Side by side</div>
+    <h2>Where they actually differ</h2>
+    <table>
+      <thead><tr><th></th><th class="a">A · Service Desk</th><th class="b">B · Book of Business</th><th class="c">C · Invisible Portal</th></tr></thead>
+      <tbody>
+        <tr><td class="rh">Organising object</td><td>The <strong>Incident</strong> — a situation needing action today</td><td>The <strong>Household</strong> — a customer relationship over time</td><td>The <strong>Record</strong> — a portable payload that travels</td></tr>
+        <tr><td class="rh">Primary user</td><td>Service manager / dispatcher</td><td>Dealer principal</td><td>Service technician</td></tr>
+        <tr><td class="rh">Where design energy goes</td><td>The triage queue</td><td>The confidence &amp; data system</td><td>The technician app and the payload</td></tr>
+        <tr><td class="rh">What it can fail on</td><td>Alert quality — noise kills trust</td><td><strong>Data</strong> — can be built beautifully and still fail</td><td><strong>Partners</strong> — roadmap depends on others</td></tr>
+        <tr><td class="rh">Time to first value</td><td class="mono">Fastest</td><td class="mono">Slowest</td><td class="mono">Fast for technicians</td></tr>
+        <tr><td class="rh">Measured by</td><td>Response time, dispatch conversion</td><td>Data completeness, then revenue</td><td>App usage — portal logins <em>fall</em></td></tr>
+        <tr><td class="rh">Relationship with dealer</td><td>Strengthened</td><td>Strengthened most</td><td><strong>Traded for reach</strong></td></tr>
+        <tr><td class="rh">Gating question</td><td>Is FSM write available?</td><td>How complete is install &amp; warranty data?</td><td>Will partners return outcome data?</td></tr>
+        <tr><td class="rh">Shared prerequisite</td><td colspan="3" style="background:#F6F8F9"><strong>All three require the same foundation:</strong> deduplicated incident grouping and a plain-language fault translation library. None of them work on raw codes. This is the first phase of every option and it is not optional in any of them.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- LENS -->
+<section id="lens">
+  <div class="wrap">
+    <div class="snum">05 — Decision lens</div>
+    <h2>Which options survive your actual constraints</h2>
+    <p class="lede">Set the three conditions that gate these strategies. Each is knowable this week and none require design work to answer. The readout shows which options remain viable.</p>
+
+    <div class="lens">
+      <div class="lensbar">
+        <div class="lq">
+          <div class="lqt">Can we write into dealers' FSM?</div>
+          <div class="seg" id="q1"><button data-v="bi" aria-pressed="true">Bidirectional</button><button data-v="one">One-way only</button><button data-v="no">No / unknown</button></div>
+        </div>
+        <div class="lq">
+          <div class="lqt">What share of dealers run any FSM?</div>
+          <div class="seg" id="q2"><button data-v="most" aria-pressed="true">Most</button><button data-v="mixed">Mixed</button><button data-v="few">Few</button></div>
+        </div>
+        <div class="lq">
+          <div class="lqt">Install date &amp; warranty data completeness</div>
+          <div class="seg" id="q3"><button data-v="good" aria-pressed="true">Good</button><button data-v="partial">Partial</button><button data-v="poor">Poor</button></div>
+        </div>
+      </div>
+      <div class="lensbody" id="lensOut"></div>
+      <div class="lensfoot">This is a framing device, not an oracle — it encodes the gating questions from the three requirements documents and nothing more. It cannot weigh strategy, appetite, or org readiness, and it should not be the last input to the decision.</div>
+    </div>
+  </div>
+</section>
+
+<!-- RECOMMENDATION -->
+<section id="recommendation">
+  <div class="wrap">
+    <div class="snum">06 — Recommendation</div>
+    <h2>Advance Option A first</h2>
+    <div class="rec">
+      <div class="rt">The position</div>
+      <h3>Fix the silence and the noise before anything else</h3>
+      <p>Option A attacks the root cause directly and cheaply: the portal is silent by default and unsorted when opened. Deduplication, severity ranking, and plain-language alert descriptions are prerequisite work that Options B and C both consume — neither a revenue tool nor an FSM feed is worth building on top of an unranked, duplicated alert stream.</p>
+      <p><strong>The tradeoff, honestly:</strong> Option A improves operations without directly monetising them, so it will show up as engagement and response time, not as revenue, in the first two quarters. An executive expecting a revenue line in Q1 should be choosing B — and should first answer whether the data exists to support it.</p>
+      <p style="margin-bottom:0"><strong>Two things worth doing immediately regardless of the decision:</strong> change the notification default from None to on (only after deduplication is in place), and remove the manual "Run a Report" step from Malfunction Detection so predictions arrive on their own.</p>
+    </div>
+
+    <div class="question">
+      <div class="qt">The question the business must answer before committing</div>
+      <div class="qq">Is the FSM integration bidirectional, or read-only?</div>
+      <p>Every option here depends on a signal turning into scheduled work. If the portal can write a work order back into the dealer's FSM, Option A is a genuine workflow product. If it can only read, all three options end at "we told you" — and the redesign investment should be scoped accordingly, or the integration budget should move ahead of the design budget.</p>
+    </div>
+  </div>
+</section>
+
+<!-- USING -->
+<section id="using">
+  <div class="wrap">
+    <div class="snum">07 — Using these documents</div>
+    <h2>What each one is for</h2>
+    <div class="cols">
+      <div class="card"><span class="tag">Format</span><h4>Written as design prompts</h4><p>Each PRD is structured so it can be handed to a designer — or a generative design tool — and produce screens. Context first, then screen-by-screen requirements, content, integration, and visual direction.</p></div>
+      <div class="card"><span class="tag">Prototypes</span><h4>Concept demonstrations, not code</h4><p>Every interactive element is a working demonstration of a specific argument, built to be clicked in a room. None of it is production code and all figures are illustrative.</p></div>
+      <div class="card"><span class="tag">Caveat</span><h4>Priority models are unvalidated</h4><p>Urgency rankings, health factors, and truncation order are informed proposals drawn from the current product's data — not tested with service managers. Each is cheap to validate and worth doing before design commits.</p></div>
+      <div class="card"><span class="tag">Data notice</span><h4>All customer data is fictional</h4><p>Household names, addresses, phone numbers and equipment serials throughout these documents are invented. Equipment model numbers and fault codes are real, and the patterns shown are drawn from the current product — but no actual customer appears anywhere in this collection.</p></div>
+      <div class="card"><span class="tag">If presenting live</span><h4>Open all three on separate tabs</h4><p>A opens on a queue, B opens on a book, C opens on a record. That is the strategic choice in three images, and it is a reasonable way to start the session before anyone reads a word.</p></div>
+    </div>
+    <p class="note-inline">All four files must sit in the same folder for the links above to resolve. On GitHub Pages, name this file <code>index.html</code> and it becomes the landing page automatically.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">Connected Portal — experience assessment and strategic options · July 2026 · Draft for executive review. Companion documents: <code>connected-portal-service-desk.html</code>, <code>connected-portal-book-of-business.html</code>, <code>connected-portal-invisible-portal.html</code></div>
+</footer>
+
+<script>
+const L={q1:'bi',q2:'most',q3:'good'};
+
+function verdict(){
+  const out=[];
+
+  /* A */
+  let aSt,aCl,aTx;
+  if(L.q1==='bi'){aSt='Advance first';aCl='go';aTx='Full workflow product. Incidents become work orders in the dealer\'s own system, and the loop closes.';}
+  else if(L.q1==='one'){aSt='Advance first';aCl='go';aTx='Still the strongest first move. The primary action degrades to an exportable job packet — designed for, not improvised.';}
+  else {aSt='Advance, reduced scope';aCl='cau';aTx='Without FSM write this ends at "we told you." Still worth doing — grouping and plain language are prerequisites for everything — but scope it as an alerting product, not a workflow one.';}
+  out.push(['a','Option A · Service Desk',aSt,aCl,aTx]);
+
+  /* B */
+  let bSt,bCl,bTx;
+  if(L.q3==='poor'){bSt='Blocked — gate 1 fails';bCl='stop';bTx='Without reliable install dates and warranty status there is no measured tier and no honest money. This becomes a data programme, not a design programme. Do not advance it as a design investment.';}
+  else if(L.q3==='partial'){bSt='Phase 1 only';bCl='cau';bTx='Viable as a book-without-money: household object, health factors, portfolio view, data health screen. Ship no dollar figures until completeness improves.';}
+  else {bSt='Full scope viable';bCl='go';bTx='Data supports measured figures. Still the highest investment and the slowest to first value — and it needs a legal position on customer-facing numbers before the share artifact ships.';}
+  out.push(['b','Option B · Book of Business',bSt,bCl,bTx]);
+
+  /* C */
+  let cSt,cCl,cTx;
+  if(L.q2==='few'){cSt='Converges with A';cCl='stop';cTx='If few dealers run an FSM there is nowhere to syndicate to. The fallback inbox becomes the whole product — which is Option A with a smaller budget and a worse name. Build A instead.';}
+  else if(L.q1==='no'){cSt='Blocked on measurement';cCl='stop';cTx='No write path means no records reach a dispatch board. The strategy has no delivery mechanism beyond email, and no way to know whether anything happened.';}
+  else if(L.q1==='one'||L.q2==='mixed'){cSt='Viable, largely unmeasurable';cCl='cau';cTx='Records deliver but Carrier goes blind after handoff. The technician app becomes the sole evidence the strategy works — so Phase 2 (own what you own) is non-negotiable.';}
+  else {cSt='Strong';cCl='go';cTx='Deep partners and broad FSM penetration. Full lifecycle visible, conversion measurable. The open risk is strategic, not technical: Carrier trades relationship for reach.';}
+  out.push(['c','Option C · Invisible Portal',cSt,cCl,cTx]);
+
+  document.getElementById('lensOut').innerHTML = out.map(([k,n,st,cl,tx])=>
+    `<div class="res ${cl}"><div class="st">${st}</div><h4>${n}</h4><p>${tx}</p></div>`).join('');
+}
+
+['q1','q2','q3'].forEach(id=>{
+  document.getElementById(id).addEventListener('click',e=>{
+    const b=e.target.closest('button'); if(!b) return;
+    [...b.parentNode.children].forEach(x=>x.setAttribute('aria-pressed','false'));
+    b.setAttribute('aria-pressed','true'); L[id]=b.dataset.v; verdict();
+  });
+});
+
+const links=[...document.querySelectorAll('.railnav a')];
+const secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+const spy=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting){links.forEach(l=>l.classList.remove('on'));const i=secs.indexOf(en.target);if(i>-1)links[i].classList.add('on');}});},{rootMargin:'-70px 0px -70% 0px'});
+secs.forEach(s=>s&&spy.observe(s));
+
+verdict();
+</script>
+</body>
+</html>

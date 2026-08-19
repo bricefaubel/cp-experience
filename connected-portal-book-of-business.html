@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Connected Portal — The Book of Business PRD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Spline+Sans+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0F1417; --ink-2:#3A444C; --ink-3:#68737C; --ink-4:#99A4AC;
+  --page:#EEF1F2; --surface:#FFFFFF; --line:#DCE2E5; --line-2:#EAEEF0;
+  --nav:#080A0B;
+
+  --meas:#14432F;   --meas-t:#E5EFEA;  --meas-l:#B2CFC2;
+  --est:#8A5A00;    --est-t:#FBF3E1;   --est-l:#E7D49F;
+  --unk:#8B959D;    --unk-t:#EFF2F3;   --unk-l:#CFD6DA;
+
+  --risk:#C4300F;   --risk-t:#FCEBE6;
+  --action:#0071BB;
+  --r:6px;
+  --sans:'Instrument Sans',system-ui,-apple-system,sans-serif;
+  --mono:'Spline Sans Mono',ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;scroll-padding-top:72px;}
+body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;}
+h1,h2,h3,h4,h5{margin:0;line-height:1.2;letter-spacing:-.02em;font-weight:600;}
+p{margin:0 0 .85em;}
+a{color:var(--meas);}
+code{font-family:var(--mono);font-size:.86em;}
+.wrap{max-width:1160px;margin:0 auto;padding:0 32px;}
+
+.masthead{background:var(--nav);color:#fff;padding:44px 0 40px;}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#8FC9B0;margin-bottom:14px;}
+.masthead h1{font-size:clamp(30px,4.4vw,50px);letter-spacing:-.032em;max-width:15ch;}
+.masthead .sub{color:#A3AEB5;margin-top:14px;font-size:17px;max-width:62ch;}
+.meta-row{display:flex;flex-wrap:wrap;gap:26px;margin-top:28px;padding-top:22px;border-top:1px solid #1F2528;}
+.meta-row div{font-size:13px;color:#78848C;}
+.meta-row strong{display:block;color:#E4EAED;font-weight:500;font-size:14px;margin-top:2px;}
+
+.railnav{position:sticky;top:0;z-index:40;background:rgba(238,241,242,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
+.railnav .wrap{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;}
+.railnav .wrap::-webkit-scrollbar{display:none;}
+.railnav a{font-family:var(--mono);font-size:11.5px;letter-spacing:.02em;text-transform:uppercase;color:var(--ink-3);text-decoration:none;padding:15px 12px;white-space:nowrap;border-bottom:2px solid transparent;}
+.railnav a:hover{color:var(--ink);}
+.railnav a.on{color:var(--ink);border-bottom-color:var(--meas);}
+
+section{padding:56px 0;border-bottom:1px solid var(--line);}
+.snum{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-4);margin-bottom:12px;}
+section h2{font-size:29px;letter-spacing:-.028em;margin-bottom:8px;}
+.lede{font-size:17px;color:var(--ink-2);max-width:72ch;}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(272px,1fr));gap:24px;margin-top:30px;}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px;}
+.card h4{font-size:15px;margin-bottom:7px;}
+.card p{font-size:14.5px;color:var(--ink-2);margin-bottom:0;}
+.card .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-4);display:block;margin-bottom:9px;}
+
+.bet{background:var(--nav);color:#fff;border-radius:var(--r);padding:34px 38px;margin-top:26px;}
+.bet .q{font-size:clamp(21px,2.6vw,30px);font-weight:600;letter-spacing:-.028em;line-height:1.25;max-width:25ch;}
+.bet .note{color:#8A959C;font-size:14.5px;margin-top:16px;max-width:68ch;margin-bottom:0;}
+
+.flag{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--risk);border-radius:var(--r);padding:22px 26px;margin-top:24px;}
+.flag .t{font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--risk);margin-bottom:8px;}
+.flag p{margin-bottom:0;color:var(--ink-2);font-size:15px;}
+.flag.good{border-left-color:var(--meas);}
+.flag.good .t{color:var(--meas);}
+
+.evidence{list-style:none;padding:0;margin:26px 0 0;display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;}
+.evidence li{background:var(--surface);padding:15px 20px;font-size:14.5px;color:var(--ink-2);display:grid;grid-template-columns:24px 1fr;gap:14px;}
+.evidence li b{color:var(--ink);font-weight:600;}
+.evidence .n{font-family:var(--mono);font-size:11px;color:var(--risk);padding-top:3px;}
+
+table{width:100%;border-collapse:collapse;margin-top:24px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;font-size:14px;}
+th{text-align:left;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:500;padding:12px 16px;background:#F6F8F9;border-bottom:1px solid var(--line);}
+td{padding:12px 16px;border-bottom:1px solid var(--line-2);vertical-align:top;color:var(--ink-2);}
+tr:last-child td{border-bottom:none;}
+td.mono{font-family:var(--mono);font-size:12.5px;color:var(--ink-3);white-space:nowrap;}
+td strong{color:var(--ink);font-weight:600;}
+
+/* confidence chips — colour + form, never colour alone */
+.cchip{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:3px;border:1px solid;white-space:nowrap;}
+.cchip.meas{color:var(--meas);background:var(--meas-t);border-color:var(--meas-l);}
+.cchip.est{color:var(--est);background:var(--est-t);border-color:var(--est-l);}
+.cchip.unk{color:var(--unk);background:var(--unk-t);border-color:var(--unk-l);border-style:dashed;}
+.mk{width:9px;height:9px;flex:none;}
+.mk.meas{background:var(--meas);}
+.mk.est{background:repeating-linear-gradient(45deg,var(--est) 0 2px,transparent 2px 4px);border:1px solid var(--est);}
+.mk.unk{border:1.5px dashed var(--unk);}
+
+/* money component */
+.money{display:inline-flex;flex-direction:column;gap:2px;}
+.fig{font-family:var(--mono);font-weight:600;letter-spacing:-.01em;line-height:1.15;}
+.fig.meas{color:var(--meas);}
+.fig.est{color:var(--est);}
+.fig.unk{color:var(--unk);font-weight:400;font-style:italic;}
+.prov{font-family:var(--mono);font-size:10px;color:var(--ink-4);letter-spacing:.02em;}
+.provbtn{background:none;border:none;padding:0;font:inherit;font-family:var(--mono);font-size:10px;color:var(--action);cursor:pointer;text-decoration:underline;text-underline-offset:2px;}
+
+/* lab */
+.lab{margin-top:28px;background:var(--surface);border:1px solid var(--line);border-radius:9px;overflow:hidden;box-shadow:0 18px 44px -30px rgba(8,10,11,.45);}
+.labbar{background:#12171A;padding:13px 18px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;}
+.lb{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#6E7A82;}
+.seg{display:flex;background:#0A0D0F;border:1px solid #232A2E;border-radius:5px;overflow:hidden;}
+.seg button{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:#828E96;background:none;border:none;padding:7px 12px;cursor:pointer;border-right:1px solid #232A2E;}
+.seg button:last-child{border-right:none;}
+.seg button[aria-pressed="true"]{background:#8FC9B0;color:#0A0D0F;font-weight:600;}
+.seg button:focus-visible{outline:2px solid #8FC9B0;outline-offset:-2px;}
+.labbody{display:grid;grid-template-columns:1fr 320px;}
+.stage{padding:24px;background:var(--page);min-height:520px;}
+.side{border-left:1px solid var(--line);padding:22px;background:var(--surface);}
+.side h5{font-family:var(--mono);font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-4);margin:0 0 10px;font-weight:500;}
+.side .blk{padding-bottom:18px;margin-bottom:18px;border-bottom:1px solid var(--line-2);}
+.side .blk:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+.unlock{list-style:none;padding:0;margin:0;font-size:13px;}
+.unlock li{padding:9px 0;border-bottom:1px solid var(--line-2);color:var(--ink-2);}
+.unlock li:last-child{border-bottom:none;}
+.unlock b{display:block;color:var(--ink);font-weight:600;font-size:13.5px;}
+.unlock .got{color:var(--meas);}
+
+/* app mock */
+.appnav{background:var(--nav);padding:11px 18px;display:flex;align-items:center;gap:20px;border-radius:7px 7px 0 0;}
+.appnav .logo{font-size:12.5px;font-weight:600;color:#fff;}
+.appnav .logo span{color:#8FC9B0;font-weight:400;}
+.appnav .tabs{display:flex;gap:16px;font-size:12px;color:#7A868D;margin-left:auto;}
+.appnav .tabs b{color:#fff;font-weight:500;border-bottom:2px solid #8FC9B0;padding-bottom:3px;}
+.appbody{background:var(--surface);border:1px solid var(--line);border-top:none;border-radius:0 0 7px 7px;padding:20px;}
+
+.bookhd{border-bottom:1px solid var(--line-2);padding-bottom:16px;margin-bottom:16px;}
+.bookhd .dt{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-4);margin-bottom:8px;}
+#bookSentence{font-size:clamp(17px,2.1vw,23px);font-weight:600;letter-spacing:-.026em;line-height:1.28;max-width:30ch;transition:opacity .18s;}
+.booktot{margin-top:14px;display:flex;flex-wrap:wrap;gap:22px;}
+.booktot .tt{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-4);margin-bottom:3px;}
+
+.comp{margin-bottom:18px;}
+.comp .ch{font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-4);margin-bottom:8px;display:flex;justify-content:space-between;}
+.bar{display:flex;height:26px;border-radius:4px;overflow:hidden;border:1px solid var(--line);}
+.bar div{display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;color:#fff;transition:flex-grow .35s;}
+.bar .s-ok{background:var(--meas);}
+.bar .s-warn{background:var(--est);}
+.bar .s-risk{background:var(--risk);}
+.bar .s-unk{background:repeating-linear-gradient(45deg,#C6CED3 0 5px,#D9DFE3 5px 10px);color:var(--ink-3);}
+.barkey{display:flex;flex-wrap:wrap;gap:14px;margin-top:8px;font-family:var(--mono);font-size:10px;color:var(--ink-3);}
+.barkey i{display:inline-block;width:9px;height:9px;margin-right:5px;vertical-align:middle;}
+
+.hrow{display:grid;grid-template-columns:1.5fr 1fr 1fr 1.1fr auto;gap:14px;padding:13px 12px;border-bottom:1px solid var(--line-2);align-items:center;font-size:13.5px;}
+.hrow.hd{font-family:var(--mono);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-4);border-bottom:1px solid var(--line);padding-bottom:8px;}
+.hrow:last-child{border-bottom:none;}
+.hrow .nm{font-weight:600;}
+.hrow .lc{font-size:12px;color:var(--ink-3);}
+.hrow .fct{display:flex;gap:4px;margin-top:5px;}
+.dotf{width:7px;height:7px;border-radius:50%;background:var(--line);}
+.dotf.ok{background:var(--meas);}
+.dotf.warn{background:var(--est);}
+.dotf.bad{background:var(--risk);}
+.dotf.unk{border:1px dashed var(--unk);background:transparent;}
+.mtag{font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:3px;background:var(--est-t);color:var(--est);border:1px solid var(--est-l);white-space:nowrap;}
+.mtag.rep{background:var(--risk-t);color:var(--risk);border-color:#F0C6B9;}
+.mtag.none{background:none;border:none;color:var(--ink-4);}
+.btn{font-family:var(--sans);font-size:12.5px;font-weight:500;padding:6px 12px;border-radius:4px;border:1px solid var(--line);background:#fff;color:var(--ink-2);cursor:pointer;white-space:nowrap;}
+.btn:hover{border-color:#C2CBD0;background:#F7F9FA;}
+.btn.primary{background:var(--meas);border-color:var(--meas);color:#fff;}
+.btn.primary:hover{background:#0E3223;border-color:#0E3223;}
+.btn:focus-visible{outline:2px solid var(--meas);outline-offset:2px;}
+
+.enrich{background:var(--est-t);border:1px solid var(--est-l);border-radius:5px;padding:12px 14px;margin-top:14px;display:flex;gap:14px;align-items:center;}
+.enrich .tx{font-size:13px;color:var(--est);}
+.enrich .tx b{display:block;color:var(--ink);font-weight:600;font-size:13.5px;margin-bottom:2px;}
+.enrich button{margin-left:auto;}
+
+/* household detail */
+.hh{background:var(--surface);border:1px solid var(--line);border-radius:7px;overflow:hidden;}
+.hhhd{padding:18px 20px;border-bottom:1px solid var(--line-2);}
+.hhhd h4{font-size:19px;letter-spacing:-.024em;}
+.hhhd .sb{font-size:13px;color:var(--ink-3);margin-top:4px;}
+.hhsec{padding:16px 20px;border-bottom:1px solid var(--line-2);}
+.hhsec:last-child{border-bottom:none;}
+.hhsec h6{font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-4);margin:0 0 10px;font-weight:500;}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:12px;}
+.fact{border:1px solid var(--line);border-radius:5px;padding:11px 12px;background:#FAFCFC;}
+.fact .fl{font-family:var(--mono);font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-4);margin-bottom:5px;}
+.fact .fv{font-size:14px;font-weight:600;line-height:1.25;}
+.fact .fs{font-size:11.5px;color:var(--ink-3);margin-top:3px;}
+.fact.ok{border-left:3px solid var(--meas);}
+.fact.warn{border-left:3px solid var(--est);}
+.fact.bad{border-left:3px solid var(--risk);}
+.fact.unk{border-left:3px dashed var(--unk);background:#F4F6F7;}
+.fact.unk .fv{color:var(--unk);font-weight:400;font-style:italic;font-size:13px;}
+
+/* moment */
+.mom{background:var(--surface);border:1px solid var(--line);border-radius:7px;overflow:hidden;max-width:720px;margin:0 auto;}
+.momhd{padding:18px 20px;border-bottom:1px solid var(--line-2);}
+.momhd .ty{font-family:var(--mono);font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--est);margin-bottom:6px;}
+.momhd h4{font-size:20px;letter-spacing:-.024em;}
+.momsec{padding:16px 20px;border-bottom:1px solid var(--line-2);}
+.momsec:last-child{border-bottom:none;}
+.momsec h6{font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-4);margin:0 0 9px;font-weight:500;}
+.momsec p{font-size:14px;color:var(--ink-2);margin:0;}
+.internal{background:#F4F6F7;}
+.internal::after{content:'Internal only — not shown to homeowner';display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-4);margin-top:10px;}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.opt{border:1px solid var(--line);border-radius:6px;padding:14px;}
+.opt.pick{border-color:var(--meas);background:var(--meas-t);}
+.opt h5{font-size:15px;margin-bottom:8px;}
+.opt .kv{font-size:12.5px;}
+.opt .kv div{display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-bottom:1px solid rgba(0,0,0,.05);}
+.opt .kv div:last-child{border-bottom:none;}
+.opt .kv span:first-child{color:var(--ink-3);}
+.opt .kv span:last-child{font-family:var(--mono);font-size:12px;text-align:right;}
+.readbox{background:var(--meas-t);border:1px solid var(--meas-l);border-radius:5px;padding:13px 15px;}
+.readbox .rl{font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--meas);margin-bottom:5px;}
+.readbox p{font-size:14.5px;color:var(--ink);margin:0;font-weight:500;}
+
+/* defensibility A/B */
+.abwrap{display:grid;grid-template-columns:1fr;gap:0;margin-top:26px;}
+.abcard{background:var(--surface);border:1px solid var(--line);border-radius:7px;padding:22px 24px;position:relative;}
+.abcard.bad{border-left:3px solid var(--risk);}
+.abcard.good{border-left:3px solid var(--meas);}
+.badline{font-size:15px;line-height:1.6;}
+.viol{background:var(--risk-t);border-bottom:1.5px dashed var(--risk);cursor:help;position:relative;}
+.annoff .viol{background:none;border-bottom:none;}
+.violkey{margin-top:16px;padding-top:14px;border-top:1px solid var(--line-2);font-size:13px;color:var(--ink-2);}
+.violkey ul{margin:8px 0 0;padding-left:18px;}
+.violkey li{margin-bottom:5px;}
+
+.pstep{border-left:2px solid var(--line);padding:0 0 26px 22px;position:relative;margin-left:8px;}
+.pstep:last-child{border-left-color:transparent;padding-bottom:0;}
+.pstep::before{content:'';position:absolute;left:-6px;top:5px;width:10px;height:10px;border-radius:50%;background:var(--surface);border:2px solid var(--meas);}
+.pstep.gate::before{background:var(--risk);border-color:var(--risk);}
+.pstep h4{font-size:15px;margin-bottom:4px;}
+.pstep .ph{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-4);margin-bottom:5px;}
+.pstep.gate .ph{color:var(--risk);}
+.pstep p{font-size:14px;color:var(--ink-2);margin-bottom:0;}
+
+.qlist{counter-reset:q;list-style:none;padding:0;margin:24px 0 0;}
+.qlist li{counter-increment:q;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 20px;margin-bottom:9px;font-size:14.5px;color:var(--ink-2);display:grid;grid-template-columns:28px 1fr;gap:12px;}
+.qlist li::before{content:counter(q,decimal-leading-zero);font-family:var(--mono);font-size:11px;color:var(--ink-4);padding-top:3px;}
+.qlist li b{color:var(--ink);font-weight:600;}
+
+.note-inline{font-size:13.5px;color:var(--ink-3);max-width:74ch;margin-top:14px;}
+footer{padding:40px 0 60px;color:var(--ink-4);font-size:13px;}
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);background:var(--nav);color:#fff;padding:12px 20px;border-radius:6px;font-size:13.5px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:90;max-width:90vw;}
+.toast.show{opacity:1;transform:translate(-50%,0);}
+.toast b{color:#8FC9B0;font-weight:500;}
+
+@media(max-width:980px){
+  .labbody{grid-template-columns:1fr;}
+  .side{border-left:none;border-top:1px solid var(--line);}
+  .opts{grid-template-columns:1fr;}
+  .hrow{grid-template-columns:1fr 1fr;gap:8px;}
+  .hrow.hd{display:none;}
+}
+@media(max-width:640px){.wrap{padding:0 18px;}.stage{padding:14px;}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;}html{scroll-behavior:auto;}}
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div class="wrap">
+    <div class="eyebrow">Product requirements · Option B</div>
+    <h1>The book of business</h1>
+    <p class="sub">The organising object flips from equipment to household. Faults stop being the product and become inputs to a commercial conversation — one that has to be honest enough to show a homeowner.</p>
+    <div class="meta-row">
+      <div>Version<strong>1.0 — draft for design</strong></div>
+      <div>Primary user<strong>Dealer principal</strong></div>
+      <div>Investment<strong>High</strong></div>
+      <div>Gating question<strong>How complete is the data?</strong></div>
+    </div>
+  </div>
+</div>
+
+<nav class="railnav">
+  <div class="wrap">
+    <a href="#diagnosis">Diagnosis</a>
+    <a href="#bet">The bet</a>
+    <a href="#money">The money rule</a>
+    <a href="#lab">Data lab</a>
+    <a href="#homeowner">Defensibility</a>
+    <a href="#moment">The moment</a>
+    <a href="#model">Model</a>
+    <a href="#screens">Screens</a>
+    <a href="#content">Content</a>
+    <a href="#measure">Measurement</a>
+    <a href="#gates">Gates</a>
+    <a href="#questions">Questions</a>
+  </div>
+</nav>
+
+<!-- 01 -->
+<section id="diagnosis">
+  <div class="wrap">
+    <div class="snum">01 — Diagnosis</div>
+    <h2>A product that talks about machines to people who run a business</h2>
+    <p class="lede">The navigable objects today are controls, serials, faults and configuration fields. The dealer's actual business is organised around households — who owns what, how old it is, what's still covered, and who is due for a conversation. The product has no representation of that at all.</p>
+    <ul class="evidence">
+      <li><span class="n">01</span><span><b>Opportunities and alerts don't speak.</b> 104 opportunities sit in a tab with no visible connection to the 96 alerts that would justify any of them.</span></li>
+      <li><span class="n">02</span><span><b>There is no book.</b> Customers are reachable only by name search or by drilling from a control. No portfolio view, no sort by value, no sense of a whole.</span></li>
+      <li><span class="n">03</span><span><b>Wear data exists but is never commercial.</b> 16,504 blower hours on one system is a real signal of age. It's shown as a counter.</span></li>
+      <li><span class="n">04</span><span><b>The predictive engine finds billable work</b> — slow leaks, degrading units — and presents it as an engineering result.</span></li>
+      <li><span class="n">05</span><span><b>Nothing shows warranty, install date, agreement status, or equipment age.</b> The four things a commercial conversation depends on.</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- 02 -->
+<section id="bet">
+  <div class="wrap">
+    <div class="snum">02 — The bet</div>
+    <div class="bet">
+      <div class="q">Dealers engage with money, not machines. The unit of value is the customer relationship, not the control.</div>
+      <p class="note">Serial numbers become an attribute of a household. Faults and predictions become inputs to a commercial statement: this leak is a billable visit; this fifteen-year-old unit throwing repeat compressor faults is a replacement conversation.</p>
+    </div>
+    <div class="flag">
+      <div class="t">The tradeoff, stated plainly</div>
+      <p>This is the highest-investment option and the only one that can fail on <em>data</em> rather than on design. It depends on install dates, warranty terms, pricing and agreement status — much of it in FSM systems of varying quality, or a filing cabinet, or nowhere. <strong>Wrong dollar figures destroy credibility faster than no dollar figures.</strong> The money rule below makes that survivable; it does not make it disappear.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 03 -->
+<section id="money">
+  <div class="wrap">
+    <div class="snum">03 — The money rule</div>
+    <h2>Every figure carries its provenance and degrades rather than guesses</h2>
+    <p class="lede">This is the load-bearing wall of Option B. Design should treat it as a component system, not a set of caveats bolted on late.</p>
+    <table>
+      <thead><tr><th style="width:150px">Tier</th><th>Source</th><th>Display rule</th><th style="width:190px">Example</th></tr></thead>
+      <tbody>
+        <tr><td><span class="cchip meas"><span class="mk meas"></span>Measured</span></td><td>The dealer's own pricing, labour rate, agreement terms, a real install date</td><td>A point figure is permitted</td><td><span class="fig meas" style="font-size:16px">$7,450</span><div class="prov">your pricing · updated 12 Jun</div></td></tr>
+        <tr><td><span class="cchip est"><span class="mk est"></span>Estimated</span></td><td>Regional or model-family averages, inferred install date, standard terms</td><td><strong>Range only. Never a point figure.</strong></td><td><span class="fig est" style="font-size:16px">$6,800–$9,200</span><div class="prov">regional averages</div></td></tr>
+        <tr><td><span class="cchip unk"><span class="mk unk"></span>Unknown</span></td><td>Data absent or below threshold</td><td><strong>Show nothing.</strong> Never zero, never a placeholder</td><td><span class="fig unk" style="font-size:14px">Not measured</span><div><button class="provbtn">Add pricing to see value</button></div></td></tr>
+      </tbody>
+    </table>
+
+    <div class="cols">
+      <div class="card"><span class="tag">Hard rule 01</span><h4>No point estimates from estimated data</h4><p><code>$6,800–$9,200</code> is honest. <code>$8,043</code> is a lie with decimal places.</p></div>
+      <div class="card"><span class="tag">Hard rule 02</span><h4>Never total across mixed tiers silently</h4><p>A portfolio figure summing measured and estimated must expose the split, not blend them into one confident number.</p></div>
+      <div class="card"><span class="tag">Hard rule 03</span><h4>Zero is not unknown</h4><p>A household with no pricing data isn't worth nothing; it's unmeasured. Conflating them is the fastest way to make a dealer distrust the screen.</p></div>
+      <div class="card"><span class="tag">Hard rule 04</span><h4>Provenance is one tap away</h4><p>Any figure can be interrogated: what went into this, when was it updated, what would improve it.</p></div>
+      <div class="card"><span class="tag">Hard rule 05</span><h4>Absent data is an invitation</h4><p>Empty states are the growth mechanism. Every "add your labour rate to see this" is an enrichment prompt.</p></div>
+      <div class="card"><span class="tag">And no black boxes</span><h4>Health is composed, never a score</h4><p>An opaque number will be distrusted by exactly the people whose trust this needs. Five legible factors instead — age, fault burden, performance trend, coverage, relationship — each verifiable against what a dealer already knows.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 LAB -->
+<section id="lab">
+  <div class="wrap">
+    <div class="snum">04 — Data completeness lab</div>
+    <h2>The same book at three levels of data</h2>
+    <p class="lede">Most dealers start sparse. Whether they ever get richer is decided by how the sparse state looks. Switch the data level and watch money appear, degrade to ranges, or vanish entirely — and watch the unmeasured segment of the book shrink.</p>
+
+    <div class="lab">
+      <div class="labbar">
+        <span class="lb">Data available</span>
+        <div class="seg" id="dataSeg">
+          <button data-d="sparse" aria-pressed="true">Sparse — equipment only</button>
+          <button data-d="partial" aria-pressed="false">Partial — + install &amp; warranty</button>
+          <button data-d="rich" aria-pressed="false">Rich — + agreements &amp; pricing</button>
+        </div>
+        <span class="lb" style="margin-left:auto">View</span>
+        <div class="seg" id="viewSeg">
+          <button data-v="book" aria-pressed="true">Book</button>
+          <button data-v="house" aria-pressed="false">Household</button>
+        </div>
+      </div>
+      <div class="labbody">
+        <div class="stage" id="stage"></div>
+        <div class="side">
+          <div class="blk"><h5>What this level unlocks</h5><ul class="unlock" id="unlock"></ul></div>
+          <div class="blk"><h5>Money on screen</h5><p id="moneyNote" style="font-size:13px;color:var(--ink-2);margin:0"></p></div>
+          <div class="blk"><h5>Design note</h5><p id="designNote" style="font-size:13px;color:var(--ink-2);margin:0"></p></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="note-inline"><strong>Try this:</strong> start on <em>Sparse</em> and look at whether the screen feels broken or feels like a product that knows what it would tell you next. That is the actual v1 experience for most dealers, and §12 sequences the roadmap around it — Phase 1 ships the book with no money in it at all.</p>
+  </div>
+</section>
+
+<!-- 05 DEFENSIBILITY -->
+<section id="homeowner">
+  <div class="wrap">
+    <div class="snum">05 — Defensibility</div>
+    <h2>The homeowner is in the room</h2>
+    <p class="lede">Dealers will turn the screen around. In a kitchen at 6pm, "let me show you what your system's been doing" is the most natural move available — so this becomes a customer-facing artifact whether it is designed as one or not.</p>
+
+    <div class="flag good">
+      <div class="t">Design constraint</div>
+      <p>Every figure, phrase and recommendation must be defensible to the homeowner if they read it over the dealer's shoulder. This is not a compliance appendix — it is the difference between a product Carrier can put its name on and one it cannot.</p>
+    </div>
+
+    <div class="labbar" style="border-radius:7px 7px 0 0;margin-top:26px">
+      <span class="lb">Same moment, written two ways</span>
+      <div class="seg" id="abSeg">
+        <button data-ab="bad" aria-pressed="true">Indefensible</button>
+        <button data-ab="good" aria-pressed="false">Defensible</button>
+      </div>
+      <div class="seg" id="annoSeg" style="margin-left:auto">
+        <button data-x="anno" aria-pressed="true">Flag violations</button>
+      </div>
+    </div>
+    <div id="abStage"></div>
+
+    <div class="cols">
+      <div class="card"><span class="tag">Rules out</span><h4>Target language</h4><p>No "ripe," no "warm lead," no urgency scoring presented as customer psychology. The customer is a customer, in every string, on every screen.</p></div>
+      <div class="card"><span class="tag">Rules out</span><h4>Recommendations that hide the alternative</h4><p>A replacement recommendation must show repair beside it with real numbers — <strong>even when repair is the smaller sale.</strong></p></div>
+      <div class="card"><span class="tag">Requires</span><h4>Evidence before conclusion</h4><p>The fault history and performance trend that justify a recommendation are the most persuasive material available and the most defensible. Lead with them.</p></div>
+      <div class="card"><span class="tag">Requires</span><h4>A narrower share artifact</h4><p>"Share with homeowner" outputs evidence and options only — no margin, no lifetime value, no pipeline framing. Demonstrated in the next section.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 MOMENT -->
+<section id="moment">
+  <div class="wrap">
+    <div class="snum">06 — The moment</div>
+    <h2>Where the honesty is enforced</h2>
+    <p class="lede">A moment is a trigger, a recommended conversation, an honest set of options, supporting evidence, and a value with a confidence tier. Toggle the audience — internal regions disappear entirely from the homeowner artifact rather than being visually de-emphasised.</p>
+
+    <div class="labbar" style="border-radius:7px 7px 0 0;margin-top:26px">
+      <span class="lb">Audience</span>
+      <div class="seg" id="audSeg">
+        <button data-a="internal" aria-pressed="true">Internal view</button>
+        <button data-a="home" aria-pressed="false">Share with homeowner</button>
+      </div>
+      <span class="lb" style="margin-left:auto">Pricing data</span>
+      <div class="seg" id="priceSeg">
+        <button data-p="est" aria-pressed="true">Estimated</button>
+        <button data-p="meas" aria-pressed="false">Measured</button>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--line);border-top:none;border-radius:0 0 7px 7px;padding:24px" id="momStage"></div>
+
+    <table>
+      <thead><tr><th style="width:180px">Moment type</th><th>Trigger</th><th>Typical conversation</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Billable service</strong></td><td>Predictive finding or repeat fault outside warranty</td><td>"We can see a slow leak; here's what it costs to fix now"</td></tr>
+        <tr><td><strong>Warranty capture</strong></td><td>Fault on covered equipment</td><td>"This is covered — let's use it before it expires"</td></tr>
+        <tr><td><strong>Coverage expiring</strong></td><td>Warranty or agreement ending within 90 days</td><td>"Your coverage ends in June; here are the options"</td></tr>
+        <tr><td><strong>Agreement candidate</strong></td><td>High fault burden, no agreement</td><td>"You've had three visits this year; an agreement would have covered them"</td></tr>
+        <tr><td><strong>Replacement conversation</strong></td><td>Age + fault burden + performance decline together</td><td>"Here's repair, here's replace, here's the honest comparison"</td></tr>
+        <tr><td><strong>Reconnection</strong></td><td>Control offline &gt; 30 days</td><td>"We've lost visibility on your system" — protects the platform itself</td></tr>
+      </tbody>
+    </table>
+    <p class="note-inline"><strong>Lifecycle:</strong> Surfaced → Qualified → Contacted → Quoted → Won / Lost / <strong>Deferred</strong>. Deferred is a first-class state with a date. Most HVAC moments are timing problems, not interest problems, and a product that only offers won/lost will be abandoned by anyone with a real pipeline.</p>
+  </div>
+</section>
+
+<!-- 07 MODEL -->
+<section id="model">
+  <div class="wrap">
+    <div class="snum">07 — Concept model</div>
+    <h2>Four objects, one demotion</h2>
+    <div class="cols">
+      <div class="card"><span class="tag">Primary object</span><h4>Household</h4><p>A property, its occupants, its systems, its coverage, its history, its value. Replaces "control" as the thing the product is organised around.</p></div>
+      <div class="card"><span class="tag">Attribute</span><h4>System</h4><p>The equipment set at a household. Age, model, refrigerant, runtime, connection. An attribute of a household, not a peer.</p></div>
+      <div class="card"><span class="tag">Demoted</span><h4>Signal</h4><p>A fault, incident or prediction. <strong>An input, no longer an output.</strong> Signals never appear as the primary object anywhere in this product — they appear as evidence inside health and inside moments.</p></div>
+      <div class="card"><span class="tag">New</span><h4>Moment</h4><p>A trigger, a recommended conversation, an honest set of options, supporting evidence, and a value with a confidence tier.</p></div>
+    </div>
+    <div class="flag">
+      <div class="t">Supersedes</div>
+      <p>The existing <strong>Opportunities</strong> tab — 104 items, disconnected from everything — is replaced. Its contents migrate into moments or are retired. Running both is the fastest way to make neither trusted.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 08 SCREENS -->
+<section id="screens">
+  <div class="wrap">
+    <div class="snum">08 — Screens</div>
+    <h2>Five surfaces, each in three data states</h2>
+    <div class="cols">
+      <div class="card"><span class="tag">8.1 — new home</span><h4>Book of Business</h4><p>Book header sentence, composition strip broken down by health factor (including an honest <em>unmeasured</em> segment), sortable household list, saved segments. The five counter tiles are removed — connected-control counts are platform metrics, not book metrics.</p></div>
+      <div class="card"><span class="tag">8.2 — mobile matters</span><h4>Household record</h4><p>Identity, the five health factors, systems with age against service life, coverage in high contrast, open moments, one chronological history spine, and the config detail collapsed at the bottom. Will be opened in a truck and a hallway — design 390pt as a first-class case.</p></div>
+      <div class="card"><span class="tag">8.3 — highest scrutiny</span><h4>Moment detail</h4><p>Trigger, evidence, options side by side, honest recommendation, value and confidence, actions. Charts are <em>earned</em> here and nowhere else: a capacity-decline curve is the most persuasive and most honest artifact available.</p></div>
+      <div class="card"><span class="tag">8.4</span><h4>Pipeline</h4><p>Moments by lifecycle state, deferred items surfacing on their date, value totals with confidence splits intact. Deliberately not a CRM — see open question 06.</p></div>
+      <div class="card"><span class="tag">8.5 — the growth engine</span><h4>Data health</h4><p>What's missing <em>ranked by value unlocked</em>, not a completeness percentage. Bulk enrichment, source and freshness per field, and in-place correction from anywhere. A dealer who can fix a wrong number stays; one who can only be annoyed by it leaves.</p></div>
+      <div class="card"><span class="tag">Carried over</span><h4>The fault translation library</h4><p>Plain-language translation of every code remains a prerequisite, unchanged from the other options. Option B adds a second content layer on top: the commercial vocabulary.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 09 CONTENT -->
+<section id="content">
+  <div class="wrap">
+    <div class="snum">09 — Content</div>
+    <h2>Commercial vocabulary</h2>
+    <div class="cols">
+      <div class="card"><span class="tag">Voice rule</span><h4>Describe the situation, not the sale</h4><p>"This system is 15 years old and has had four faults this year" — not "high-value replacement opportunity."</p></div>
+      <div class="card"><span class="tag">Voice rule</span><h4>Confidence in words, not only styling</h4><p>"Estimated from regional averages" appears as text, because styling doesn't survive a screenshot, a print, or a colourblind reader.</p></div>
+      <div class="card"><span class="tag">Voice rule</span><h4>Recommendations name the tradeoff</h4><p>"Replacing now avoids a likely compressor failure and cuts running cost; repairing costs less today and buys perhaps three years."</p></div>
+      <div class="card"><span class="tag">Voice rule</span><h4>Deferral is normal</h4><p>Copy should never imply a dealer is failing by deferring. Most moments are timing.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 MEASURE -->
+<section id="measure">
+  <div class="wrap">
+    <div class="snum">10 — Measurement</div>
+    <h2>Data completeness is the leading indicator</h2>
+    <table>
+      <thead><tr><th style="width:130px">Gate</th><th>Criterion</th><th style="width:130px">Target</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">SHIP</td><td>Point-estimate figures displayed from estimated-tier data — verified by audit, not intent</td><td><strong>Zero</strong></td></tr>
+        <tr><td class="mono">SHIP</td><td>Displayed figures resolvable to provenance in one interaction</td><td><strong>100%</strong></td></tr>
+        <tr><td class="mono">SHIP</td><td>Repair-vs-replace comparison present on replacement moments</td><td><strong>100%</strong></td></tr>
+        <tr><td class="mono">SHIP</td><td>Sparse-data state passes unaided usability review with non-integrated dealers</td><td><strong>Pass</strong></td></tr>
+        <tr><td class="mono">90–180D</td><td><strong>Data completeness growth per dealer</strong> — the leading indicator of everything else</td><td>Baseline &amp; climb</td></tr>
+        <tr><td class="mono">90–180D</td><td>Moments contacted within 14 days of surfacing</td><td><strong>≥ 40%</strong></td></tr>
+        <tr><td class="mono">90–180D</td><td>Agreement attach rate, connected households vs. dealer baseline</td><td>Improve</td></tr>
+        <tr><td class="mono">CANARY</td><td><strong>Corrections per dealer per week.</strong> A spike means the data is wrong and the product is teaching dealers to distrust it — and it looks like healthy engagement on a naive dashboard</td><td>Flat or falling</td></tr>
+        <tr><td class="mono">CANARY</td><td><strong>Moments dismissed as "not appropriate for this customer."</strong> A defensibility failure, and a brand risk before it is a product one</td><td>&lt; 10%</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 11 GATES -->
+<section id="gates">
+  <div class="wrap">
+    <div class="snum">11 — Readiness gates &amp; sequencing</div>
+    <h2>This one can be built beautifully and still fail</h2>
+    <p class="lede">Unlike the other two options, Option B should not enter design production until the first two gates are answered. Both are knowable this week.</p>
+    <div style="margin-top:26px">
+      <div class="pstep gate"><div class="ph">Gate 1 — data</div><h4>How complete are install dates and warranty status?</h4><p>What percentage of connected households have a reliable install date and warranty status available to Carrier today? If it's low, Phase 1 is a data programme, not a design programme.</p></div>
+      <div class="pstep gate"><div class="ph">Gate 2 — pricing</div><h4>Will dealers supply pricing and labour rates?</h4><p>Through what mechanism? Without this there is no measured tier and the entire product runs on ranges.</p></div>
+      <div class="pstep"><div class="ph">Phase 1</div><h4>Make the book legible without money</h4><p>Household object, health factors, portfolio view, data health screen. Ships real value in the sparse state and drives the enrichment everything else depends on.</p></div>
+      <div class="pstep"><div class="ph">Phase 2</div><h4>Coverage</h4><p>Warranty and agreement status, expiry moments, warranty capture. Highest-confidence data, lowest-risk figures, immediate dealer value.</p></div>
+      <div class="pstep"><div class="ph">Phase 3</div><h4>Moments with money</h4><p>Estimated ranges first, measured values where pricing exists. The repair-vs-replace comparison and the share-with-homeowner artifact ship here, together — neither ships without the other.</p></div>
+      <div class="pstep"><div class="ph">Phase 4</div><h4>Pipeline and attribution</h4><p>Lifecycle tracking, deferral, outcome capture, revenue attribution with confidence splits intact.</p></div>
+    </div>
+    <div class="flag">
+      <div class="t">The failure mode</div>
+      <p>Shipping money before the data supports it. One dealer shown a confidently wrong replacement value in front of a customer will tell every dealer they know — and the platform does not get a second first impression.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 12 QUESTIONS -->
+<section id="questions">
+  <div class="wrap">
+    <div class="snum">12 — Open questions</div>
+    <h2>Answer before design production</h2>
+    <ol class="qlist">
+      <li><span><b>What is the actual completeness of install date and warranty data across the connected base?</b> Gate 1. Everything downstream is sized by this answer.</span></li>
+      <li><span><b>Will dealers supply pricing and labour rates — and does Carrier want to hold them?</b> Gate 2. Carries commercial sensitivity and possibly antitrust considerations worth a legal read.</span></li>
+      <li><span><b>Does surfacing replacement opportunities create brand risk if a dealer uses it aggressively?</b> Carrier's name is on the screen in the homeowner's kitchen. §05 is the design answer; a policy answer is also needed.</span></li>
+      <li><span>Is the equipment-age-to-service-life model defensible per model family, or is it a generic curve? A generic curve applied to a specific serial is exactly the confident wrongness the money rule exists to prevent.</span></li>
+      <li><span><b>Who is accountable if a figure shown to a homeowner is wrong?</b> Needs a legal position before the share-with-homeowner artifact ships.</span></li>
+      <li><span>Does this compete with the dealer's existing CRM, and does it need to? If larger dealers already run pipeline elsewhere, v1 may be better as a signal source that hands off than a pipeline that competes and loses.</span></li>
+    </ol>
+  </div>
+</section>
+
+<footer><div class="wrap">Connected Portal — The Book of Business · PRD v1.0 · Draft for design exploration. Prototypes are concept demonstrations, not production code. All figures illustrative. All customer names, addresses and serials are fictional.</div></footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================= DATA ================= */
+const HH = [
+  {id:'mak', name:'Dana Whitfield', loc:'Fairmont, IN', sys:'Infinity® Touch Control', model:'SYSTXCCITC01-C', sn:'9002W400022',
+   install:2011, life:'15–20 yrs', faults12:4, trend:'−14% capacity / 6 wks', warranty:'Expired Mar 2021', agreement:'None on file',
+   moment:'Replacement conversation', mtype:'rep', est:[6800,9200], meas:7450, lastVisit:'Aug 2024'},
+  {id:'loc', name:'Marcus Ellery', loc:'Bayshore, FL', sys:'Infinity® Fan Coil', model:'FE4ANF005L00EEAA', sn:'9003F400033',
+   install:2019, life:'15–20 yrs', faults12:2, trend:'Blower fault today', warranty:'Active to Mar 2029', agreement:'Active — renews Nov',
+   moment:'Warranty capture', mtype:'', est:[380,620], meas:480, lastVisit:'Feb 2026'},
+  {id:'sqa', name:'Lakeside Property', loc:'Cedar Falls, WI', sys:'Infinity® Touch Control', model:'SYSTXCCITC01-C', sn:'9001W400011',
+   install:2021, life:'15–20 yrs', faults12:9, trend:'Repeat comm faults', warranty:'Active to Jun 2026', agreement:'None on file',
+   moment:'Coverage expiring', mtype:'', est:[540,880], meas:695, lastVisit:'Nov 2025'},
+  {id:'aga', name:'Harbor View 901', loc:'Port Alden, GU', sys:'Infinity® Fan Coil', model:'FE4ANF005L00EEAA', sn:'9003F400033',
+   install:null, life:'15–20 yrs', faults12:3, trend:'Config mismatch', warranty:null, agreement:null,
+   moment:null, mtype:'none', est:null, meas:null, lastVisit:null},
+  {id:'dur', name:'Renee Okafor', loc:'Millbrook, TX', sys:'Ion® Control', model:'SYST0101CW', sn:'9005W400055',
+   install:2014, life:'15–20 yrs', faults12:3, trend:'Limit trips last season', warranty:'Expired Sep 2024', agreement:'None on file',
+   moment:'Agreement candidate', mtype:'', est:[290,460], meas:360, lastVisit:'Jan 2026'},
+  {id:'ann', name:'Joyce Barrow', loc:'Fairmont, IN', sys:'Infinity® Touch Control', model:'SYSTXCCITC01-C', sn:'9005W400055',
+   install:2022, life:'15–20 yrs', faults12:1, trend:'Stable', warranty:'Active to Apr 2027', agreement:'Active — renews Apr',
+   moment:null, mtype:'none', est:null, meas:null, lastVisit:'May 2026'}
+];
+
+const LEVELS = {
+  sparse:{
+    sentence:'83 connected households. 11 show a fault pattern worth reviewing. Add install dates to see coverage and timing.',
+    unlock:[
+      ['Fault burden','From connected equipment',true],
+      ['Performance trend','From Malfunction Detection',true],
+      ['Connection health','From the platform',true],
+      ['Equipment age','Needs install dates',false],
+      ['Coverage','Needs warranty registration',false],
+      ['Any money at all','Needs pricing',false]
+    ],
+    money:'None. Not a single figure on screen. A household with no pricing data is unmeasured, not worth zero — and the product says so rather than guessing.',
+    design:'This is the state most dealers start in and the one that decides whether they ever leave it. It must look like a product that knows exactly what it would tell you next.'
+  },
+  partial:{
+    sentence:'83 connected households. 6 lose coverage before September. 11 are due for a conversation.',
+    unlock:[
+      ['Fault burden','From connected equipment',true],
+      ['Performance trend','From Malfunction Detection',true],
+      ['Equipment age','Install dates on file',true],
+      ['Coverage','Warranty status known',true],
+      ['Estimated value','Regional averages only',true],
+      ['Measured value','Needs your pricing',false]
+    ],
+    money:'Ranges only, every one labelled in words as estimated. No totals, because a portfolio number built entirely on regional averages implies a precision that does not exist.',
+    design:'The moment ranges appear, dealers start checking them against their own knowledge. Provenance has to be one tap away or the first wrong-looking range costs the whole screen.'
+  },
+  rich:{
+    sentence:'83 connected households. 11 are due for a conversation this month.',
+    unlock:[
+      ['Fault burden','From connected equipment',true],
+      ['Performance trend','From Malfunction Detection',true],
+      ['Equipment age','Install dates on file',true],
+      ['Coverage','Warranty and agreements',true],
+      ['Measured value','Your pricing and labour rate',true],
+      ['Pipeline &amp; attribution','Lifecycle tracking',true]
+    ],
+    money:'Point figures where the dealer\'s own pricing exists, ranges where it does not — and the book total shows the split rather than blending them into one confident number.',
+    design:'Even here, mixed-confidence totals are never merged. The split is the honest representation and it doubles as a permanent enrichment prompt.'
+  }
+};
+
+let S={data:'sparse', view:'book', ab:'bad', anno:true, aud:'internal', price:'est'};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const usd=n=>'$'+n.toLocaleString('en-US');
+
+/* money renderer — the component system */
+function money(h,size){
+  const fs = size||15;
+  if(S.data==='sparse' || !h.est) {
+    return `<div class="money"><span class="fig unk" style="font-size:${fs-2}px">Not measured</span><button class="provbtn" data-enrich="1">Add pricing to see value</button></div>`;
+  }
+  if(S.data==='partial'){
+    return `<div class="money"><span class="fig est" style="font-size:${fs}px">${usd(h.est[0])}–${usd(h.est[1])}</span><span class="prov">estimated · regional averages</span></div>`;
+  }
+  return `<div class="money"><span class="fig meas" style="font-size:${fs}px">${usd(h.meas)}</span><span class="prov">your pricing · updated 12 Jun</span></div>`;
+}
+
+function ageOf(h){
+  if(S.data==='sparse' || !h.install) return null;
+  return 2026 - h.install;
+}
+
+/* ================= BOOK VIEW ================= */
+function renderBook(){
+  const L=LEVELS[S.data];
+  const comp = {
+    sparse:[['s-unk','unmeasured',68],['s-warn','fault pattern',18],['s-ok','stable',14]],
+    partial:[['s-unk','no install date',22],['s-ok','covered',34],['s-warn','coverage ending',24],['s-risk','uncovered + faults',20]],
+    rich:[['s-unk','no install date',12],['s-ok','covered + agreement',38],['s-warn','coverage ending',26],['s-risk','uncovered + faults',24]]
+  }[S.data];
+
+  const totals = {
+    sparse:'',
+    partial:`<div><div class="tt">Value in play</div><div class="money"><span class="fig est" style="font-size:19px">$58,000–$94,000</span><span class="prov">all estimated · no dealer pricing on file</span></div></div>`,
+    rich:`<div><div class="tt">Measured</div><div class="money"><span class="fig meas" style="font-size:19px">$52,400</span><span class="prov">11 households · your pricing</span></div></div>
+          <div><div class="tt">Estimated</div><div class="money"><span class="fig est" style="font-size:19px">$31,600–$59,600</span><span class="prov">14 households · regional averages</span></div></div>
+          <div><div class="tt">Unmeasured</div><div class="money"><span class="fig unk" style="font-size:16px">10 households</span><span class="prov">no install date on file</span></div></div>`
+  }[S.data];
+
+  const rows = HH.map(h=>{
+    const age = ageOf(h);
+    const f = [
+      h.faults12>3?'bad':(h.faults12>1?'warn':'ok'),
+      h.trend.includes('−')||h.trend.includes('Repeat')?'warn':'ok',
+      S.data==='sparse'||!h.install?'unk':(age>13?'bad':age>8?'warn':'ok'),
+      S.data==='sparse'||!h.warranty?'unk':(h.warranty.startsWith('Expired')?'bad':'ok'),
+      S.data==='rich'?(h.agreement&&h.agreement.startsWith('Active')?'ok':'warn'):'unk'
+    ];
+    const showMoment = S.data!=='sparse' && h.moment;
+    return `<div class="hrow">
+      <div><div class="nm">${esc(h.name)}</div><div class="lc">${esc(h.loc)}</div>
+        <div class="fct">${f.map(x=>`<span class="dotf ${x}" title="health factor"></span>`).join('')}</div></div>
+      <div><div class="lc">${esc(h.sys)}</div><div class="lc" style="font-family:var(--mono);font-size:11px">${age?age+' yrs · '+h.life:(S.data==='sparse'?'age unknown':'no install date')}</div></div>
+      <div><div class="lc">${S.data==='sparse'?'<span style="color:var(--unk);font-style:italic">not on file</span>':esc(h.warranty||'not on file')}</div>
+        <div class="lc">${S.data==='rich'?esc(h.agreement||'not on file'):''}</div></div>
+      <div>${showMoment?`<span class="mtag ${h.mtype}">${esc(h.moment)}</span><div style="margin-top:6px">${money(h,14)}</div>`:`<span class="mtag none">${S.data==='sparse'?'—':'no moment'}</span>`}</div>
+      <div><button class="btn" data-open="${h.id}">Open</button></div>
+    </div>`;
+  }).join('');
+
+  return `<div class="appnav"><span class="logo">HVAC <span>PARTNERS</span></span><span class="tabs"><b>Book</b><span>Pipeline</span><span>Data health</span><span>Resources</span></span></div>
+  <div class="appbody">
+    <div class="bookhd">
+      <div class="dt">July 2026 · Northwind Heating &amp; Cooling</div>
+      <div id="bookSentence">${esc(L.sentence)}</div>
+      ${totals?`<div class="booktot">${totals}</div>`:''}
+    </div>
+    <div class="comp">
+      <div class="ch"><span>Composition of the book</span><span>83 households</span></div>
+      <div class="bar">${comp.map(([c,l,p])=>`<div class="${c}" style="flex-grow:${p}">${p>15?p+'%':''}</div>`).join('')}</div>
+      <div class="barkey">${comp.map(([c,l])=>`<span><i class="${c}" style="background:${c==='s-ok'?'var(--meas)':c==='s-warn'?'var(--est)':c==='s-risk'?'var(--risk)':'#C6CED3'}"></i>${l}</span>`).join('')}</div>
+    </div>
+    ${S.data!=='rich'?`<div class="enrich"><div class="tx"><b>${S.data==='sparse'?'Add install dates for 24 households':'Add your pricing and labour rate'}</b>${S.data==='sparse'?'Unlocks equipment age, replacement timing and coverage':'Turns 14 estimated ranges into measured figures'}</div><button class="btn primary">Start</button></div>`:''}
+    <div style="margin-top:16px">
+      <div class="hrow hd"><div>Household</div><div>System</div><div>Coverage</div><div>Moment</div><div></div></div>
+      ${rows}
+    </div>
+  </div>`;
+}
+
+/* ================= HOUSEHOLD VIEW ================= */
+function renderHouse(){
+  const h=HH[0], age=ageOf(h);
+  const fact=(label,val,sub,cls)=>`<div class="fact ${cls}"><div class="fl">${label}</div><div class="fv">${val}</div>${sub?`<div class="fs">${sub}</div>`:''}</div>`;
+  const unknown='Not on file';
+
+  return `<div class="appnav"><span class="logo">HVAC <span>PARTNERS</span></span><span class="tabs"><span>Book</span><b>Household</b><span>Pipeline</span><span>Data health</span></span></div>
+  <div class="appbody" style="padding:0">
+  <div class="hh" style="border:none">
+    <div class="hhhd"><h4>${esc(h.name)}</h4><div class="sb">${esc(h.loc)} · ${S.data==='rich'?'customer since 2014 · last visit '+h.lastVisit:(S.data==='partial'?'last visit '+h.lastVisit:'connected since 2024')}</div></div>
+
+    <div class="hhsec">
+      <h6>Health — five factors, always visible</h6>
+      <div class="facts">
+        ${fact('Fault burden','4 faults','last 12 months','bad')}
+        ${fact('Performance','−14%','capacity, 6 wks','warn')}
+        ${age?fact('Equipment age',age+' yrs','against '+h.life,'bad'):fact('Equipment age',unknown,'add install date','unk')}
+        ${S.data!=='sparse'?fact('Warranty','Expired','Mar 2021','bad'):fact('Warranty',unknown,'add registration','unk')}
+        ${S.data==='rich'?fact('Agreement','None','no coverage','warn'):fact('Agreement',unknown,'add agreement data','unk')}
+      </div>
+      <p style="font-size:12.5px;color:var(--ink-3);margin:12px 0 0">No composite score. Each factor is independently checkable against what the dealer already knows — which is why they will believe it.</p>
+    </div>
+
+    <div class="hhsec">
+      <h6>System</h6>
+      <div class="facts">
+        ${fact('Model',h.sys,h.model,'')}
+        ${fact('Serial','<span style="font-family:var(--mono);font-size:12.5px">'+h.sn+'</span>','','')}
+        ${age?fact('Installed',h.install,age+' years old','warn'):fact('Installed',unknown,'blocks timing &amp; value','unk')}
+        ${fact('Refrigerant','R-410A','','')}
+      </div>
+    </div>
+
+    <div class="hhsec">
+      <h6>Open moment</h6>
+      ${S.data==='sparse'
+        ? `<div class="fact unk" style="border-left-width:3px"><div class="fl">No moment</div><div class="fv">Fault pattern visible, but timing and value need install date and pricing</div></div>`
+        : `<div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap">
+             <div style="flex:1;min-width:220px"><span class="mtag rep">Replacement conversation</span>
+             <p style="font-size:13.5px;color:var(--ink-2);margin:9px 0 0">15 years old, four faults in twelve months, capacity down 14%. Worth a conversation, not an emergency.</p></div>
+             <div>${money(h,20)}</div>
+           </div>`}
+    </div>
+
+    <div class="hhsec">
+      <h6>History</h6>
+      <p style="font-size:13.5px;color:var(--ink-2);margin:0">${S.data==='sparse'?'<span style="color:var(--unk);font-style:italic">Service history not connected. Only platform events are shown.</span>':'One chronological spine — visits, incidents, quotes and outcomes together, not separate logs.'}</p>
+    </div>
+
+    <div class="hhsec" style="background:#F7F9FA">
+      <h6>Advanced — configuration &amp; diagnostics</h6>
+      <p style="font-family:var(--mono);font-size:11.5px;color:var(--ink-4);margin:0;line-height:1.9">Airflow &amp; duct · Staging &amp; capacity · Accessories · Zoning · Diagnostics &amp; sensors · Utility rates</p>
+    </div>
+  </div></div>`;
+}
+
+function renderStage(){
+  const st=document.getElementById('stage');
+  st.innerHTML = S.view==='book'?renderBook():renderHouse();
+  const L=LEVELS[S.data];
+  document.getElementById('unlock').innerHTML = L.unlock.map(([a,b,on])=>
+    `<li class="${on?'got':''}"><b>${on?'✓ ':'○ '}${a}</b>${b}</li>`).join('');
+  document.getElementById('moneyNote').textContent = L.money;
+  document.getElementById('designNote').textContent = L.design;
+}
+
+/* ================= DEFENSIBILITY A/B ================= */
+function renderAB(){
+  const bad = `<div class="abcard bad ${S.anno?'':'annoff'}">
+    <div class="badline" style="font-family:var(--mono);font-size:14px;line-height:1.9">
+      <span class="viol">🔥 HIGH VALUE OPPORTUNITY — $8,043</span><br>
+      Whitfield residence · Unit age 15 yrs · <span class="viol">Replacement ripe</span><br>
+      <span class="viol">Act now — warranty expires soon</span>
+    </div>
+    ${S.anno?`<div class="violkey"><strong>Four violations:</strong>
+      <ul>
+        <li><strong>$8,043</strong> — a confident point figure derived from estimated data. Decimal precision on a guess.</li>
+        <li><strong>"Replacement ripe"</strong> — frames the customer as a target. A homeowner reading this over a shoulder sees exactly what they are to the dealer.</li>
+        <li><strong>"Act now"</strong> — manufactured urgency on a system that is degrading, not failing.</li>
+        <li><strong>No repair option</strong> — the honest alternative is absent entirely, which is the difference between advice and a pitch.</li>
+      </ul></div>`:''}
+  </div>`;
+
+  const good = `<div class="abcard good">
+    <h4 style="font-size:17px;margin-bottom:4px">Replacement conversation — Dana Whitfield</h4>
+    <div class="money" style="margin-bottom:14px"><span class="fig est" style="font-size:17px">$6,800–$9,200</span><span class="prov">estimated from regional averages · no dealer pricing on file</span></div>
+
+    <p style="font-size:14.5px;color:var(--ink-2)"><strong>What we've seen:</strong> capacity down 14% and runtime up 22% over six weeks, consistent with a slow refrigerant leak. Four faults in the last twelve months. Installed 2011 — 15 years, against a typical service life of 15–20.</p>
+
+    <div class="opts" style="margin:14px 0">
+      <div class="opt"><h5>Repair</h5><div class="kv">
+        <div><span>Approx. cost</span><span>$900–$1,400</span></div>
+        <div><span>Buys</span><span>2–4 years</span></div>
+        <div><span>Note</span><span>System past mid-life</span></div></div></div>
+      <div class="opt"><h5>Replace</h5><div class="kv">
+        <div><span>Approx. cost</span><span>$6,800–$9,200</span></div>
+        <div><span>Running cost</span><span>−20 to 30%</span></div>
+        <div><span>Note</span><span>Ends the fault pattern</span></div></div></div>
+    </div>
+
+    <div class="readbox"><div class="rl">Our read</div><p>Worth a conversation, not an emergency. The leak needs attention either way — repair now is a reasonable choice if the customer isn't ready to replace.</p></div>
+    <p style="font-size:12.5px;color:var(--ink-3);margin:12px 0 0">Warranty expired March 2021. No service agreement on file.</p>
+  </div>`;
+
+  document.getElementById('abStage').innerHTML =
+    `<div style="background:var(--surface);border:1px solid var(--line);border-top:none;border-radius:0 0 7px 7px;padding:24px">${S.ab==='bad'?bad:good}</div>`;
+}
+
+/* ================= MOMENT ================= */
+function renderMoment(){
+  const home = S.aud==='home';
+  const price = S.price==='meas';
+  const fig = price
+    ? `<div class="money"><span class="fig meas" style="font-size:19px">$7,450</span><span class="prov">your pricing · updated 12 Jun</span></div>`
+    : `<div class="money"><span class="fig est" style="font-size:19px">$6,800–$9,200</span><span class="prov">estimated · regional averages</span></div>`;
+  const rep = price ? '$1,180' : '$900–$1,400';
+  const rpl = price ? '$7,450' : '$6,800–$9,200';
+
+  document.getElementById('momStage').innerHTML = `<div class="mom">
+    <div class="momhd">
+      <div class="ty">${home?'Prepared for the homeowner · Carrier Connected Portal':'Replacement conversation · surfaced 22 Jul'}</div>
+      <h4>${home?'Your cooling system — what we\'re seeing':'Dana Whitfield · Fairmont, IN'}</h4>
+    </div>
+
+    <div class="momsec"><h6>What we've seen</h6>
+      <p>Capacity is down 14% and runtime up 22% over six weeks, consistent with a slow refrigerant leak. Four faults in the last twelve months. Installed 2011 — 15 years, against a typical service life of 15–20 years.</p>
+    </div>
+
+    <div class="momsec"><h6>Your options</h6>
+      <div class="opts">
+        <div class="opt"><h5>Repair</h5><div class="kv">
+          <div><span>Approx. cost</span><span>${rep}</span></div>
+          <div><span>Buys</span><span>2–4 years</span></div>
+          <div><span>Covers</span><span>Leak repair + recharge</span></div></div></div>
+        <div class="opt"><h5>Replace</h5><div class="kv">
+          <div><span>Approx. cost</span><span>${rpl}</span></div>
+          <div><span>Running cost</span><span>−20 to 30%</span></div>
+          <div><span>Covers</span><span>Ends the fault pattern</span></div></div></div>
+      </div>
+      ${price?'':'<p style="font-size:12px;color:var(--ink-3);margin:10px 0 0">Figures are estimated from regional averages, not a quote.</p>'}
+    </div>
+
+    <div class="momsec"><h6>Our read</h6>
+      <div class="readbox"><div class="rl">Recommendation</div><p>Worth a conversation, not an emergency. The leak needs attention either way — repair now is a reasonable choice if you're not ready to replace.</p></div>
+    </div>
+
+    <div class="momsec"><h6>Coverage</h6>
+      <p style="font-size:13.5px">Warranty expired March 2021. No service agreement on file.</p>
+    </div>
+
+    ${home?'':`
+    <div class="momsec internal"><h6>Value &amp; confidence</h6>
+      ${fig}
+      <p style="font-size:13px;color:var(--ink-3);margin-top:10px">Household lifetime value ${price?'$18,400':'$14,000–$23,000'} · agreement attach opportunity · 3 prior visits</p>
+    </div>
+    <div class="momsec internal"><h6>Pipeline</h6>
+      <p style="font-size:13.5px">Surfaced 22 Jul · not yet contacted · suggested owner: comfort advisor</p>
+    </div>`}
+
+    <div class="momsec" style="display:flex;gap:8px;flex-wrap:wrap">
+      ${home
+        ? `<button class="btn primary">Print for customer</button><button class="btn">Email to customer</button>`
+        : `<button class="btn primary">Create quote</button><button class="btn">Log contact</button><button class="btn">Defer with date</button><button class="btn" id="shareBtn">Share with homeowner</button>`}
+    </div>
+  </div>
+  ${home?'<p class="note-inline" style="text-align:center;margin-top:16px">Internal regions are <strong>absent</strong>, not de-emphasised. Value, lifetime value and pipeline framing cannot be revealed by scrolling, screenshotting, or handing over the tablet.</p>':''}`;
+}
+
+/* ================= WIRING ================= */
+function seg(id,key,cb){
+  document.getElementById(id).addEventListener('click',e=>{
+    const b=e.target.closest('button'); if(!b) return;
+    [...b.parentNode.children].forEach(x=>x.setAttribute('aria-pressed','false'));
+    b.setAttribute('aria-pressed','true'); cb(b.dataset[key]);
+  });
+}
+seg('dataSeg','d',v=>{S.data=v;renderStage();});
+seg('viewSeg','v',v=>{S.view=v;renderStage();});
+seg('abSeg','ab',v=>{S.ab=v;renderAB();});
+seg('audSeg','a',v=>{S.aud=v;renderMoment();});
+seg('priceSeg','p',v=>{S.price=v;renderMoment();});
+document.getElementById('annoSeg').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  const on=b.getAttribute('aria-pressed')==='true';
+  b.setAttribute('aria-pressed',String(!on)); S.anno=!on; renderAB();
+});
+document.getElementById('stage').addEventListener('click',e=>{
+  if(e.target.closest('[data-open]')){ S.view='house';
+    [...document.getElementById('viewSeg').children].forEach(x=>x.setAttribute('aria-pressed',x.dataset.v==='house'));
+    renderStage(); return; }
+  if(e.target.closest('[data-enrich]')) toast('<b>Enrichment prompt</b> — absent data is the growth mechanism, not an error state');
+});
+document.getElementById('momStage').addEventListener('click',e=>{
+  if(e.target.closest('#shareBtn')){ S.aud='home';
+    [...document.getElementById('audSeg').children].forEach(x=>x.setAttribute('aria-pressed',x.dataset.a==='home'));
+    renderMoment(); }
+});
+function toast(m){const t=document.getElementById('toast');t.innerHTML=m;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2800);}
+
+const links=[...document.querySelectorAll('.railnav a')];
+const secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+const spy=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting){links.forEach(l=>l.classList.remove('on'));const i=secs.indexOf(en.target);if(i>-1)links[i].classList.add('on');}});},{rootMargin:'-70px 0px -70% 0px'});
+secs.forEach(s=>s&&spy.observe(s));
+
+renderStage(); renderAB(); renderMoment();
+</script>
+</body>
+</html>
